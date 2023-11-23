@@ -30,18 +30,18 @@ Vue.use(Vuex);
 
   // Array de Jogos com referências aos IDs de Gênero e Desenvolvedor
   const jogos = [
-        { id: 1, nome: "Shadow Quest", generoId: 1, desenvolvedorId: 1, rating: 3, valor: 12,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0},
-        { id: 2, nome: "Speed Mania", generoId: 2, desenvolvedorId: 2, rating: 0, valor: 15,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 3, nome: "Island Adventure", generoId: 3, desenvolvedorId: 3, rating: 2, valor: 10,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 4, nome: "Soccer Champions", generoId: 4, desenvolvedorId: 4, rating: 0, valor: 8,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 5, nome: "Battle Royale", generoId: 5, desenvolvedorId: 5, rating: 3, valor: 22,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
+        { id: 1, nome: "Shadow Quest", generoId: 1, desenvolvedorId: 1, rating: 3, valor: 12,  quantidadeMidiaFisica: 3,  quantidadeMidiaDigital: 1},
+        { id: 2, nome: "Speed Mania", generoId: 2, desenvolvedorId: 2, rating: 0, valor: 15,  quantidadeMidiaFisica: 3,  quantidadeMidiaDigital: 0 },
+        { id: 3, nome: "Island Adventure", generoId: 3, desenvolvedorId: 3, rating: 2, valor: 10,  quantidadeMidiaFisica: 2,  quantidadeMidiaDigital: 1 },
+        { id: 4, nome: "Soccer Champions", generoId: 4, desenvolvedorId: 4, rating: 0, valor: 8,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 2 },
+        { id: 5, nome: "Battle Royale", generoId: 5, desenvolvedorId: 5, rating: 3, valor: 22,  quantidadeMidiaFisica: 1,  quantidadeMidiaDigital: 0 },
         { id: 6, nome: "Mystery of the Ancients", generoId: 3, desenvolvedorId: 6, rating: 0, valor: 14,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 7, nome: "Futuristic Racing", generoId: 2, desenvolvedorId: 7, rating: 4, valor: 10,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 8, nome: "Fantasy Football", generoId: 4, desenvolvedorId: 8, rating: 1, valor: 5,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
+        { id: 7, nome: "Futuristic Racing", generoId: 2, desenvolvedorId: 7, rating: 4, valor: 10,  quantidadeMidiaFisica: 2,  quantidadeMidiaDigital: 0 },
+        { id: 8, nome: "Fantasy Football", generoId: 4, desenvolvedorId: 8, rating: 1, valor: 5,  quantidadeMidiaFisica: 4,  quantidadeMidiaDigital: 2 },
         { id: 9, nome: "Galaxy Defenders", generoId: 5, desenvolvedorId: 9, rating: 4, valor: 20,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 10, nome: "Dragon's Journey", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 11,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 11, nome: "Dragon's Journey", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 16,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 },
-        { id: 12, nome: "Dragon's Journey", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 8,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 }
+        { id: 10, nome: "Dragon's Journey", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 11,  quantidadeMidiaFisica: 2,  quantidadeMidiaDigital: 0 },
+        { id: 11, nome: "Mairo World", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 16,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 4 },
+        { id: 12, nome: "Sonic", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 8,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 }
   ];
 
 

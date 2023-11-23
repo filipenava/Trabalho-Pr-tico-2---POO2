@@ -5,6 +5,9 @@
     <!-- Modal para Jogos -->
     <game-modal ref="gameModal" :editableGame="selectedGame" @updateGame="handleUpdateGame"></game-modal>
 
+    <!-- Modal de confirmação de exclusão -->
+    <purchase-modal ref="purchaseModal" :selectedGame="selectedGame" @add-to-cart="handleAddToCart"></purchase-modal>
+
     <!-- Listagem de Jogos -->
     <div class="container-fluid">
       <div class="row">
@@ -40,9 +43,14 @@
         <div v-if="selectedGames.length > 0">
           <h5>Jogos Selecionados:</h5>
           <ul>
-            <li v-for="game in selectedGames" :key="game.id">{{ game.nome }} - R$ {{ game.valor }}</li>
+            <li v-for="game in selectedGames" :key="game.id">
+              {{ game.nome }} - R$ {{ game.valor }} ({{ game.mediaType === 'fisica' ? 'Mídia Física' : 'Mídia Digital' }})
+            </li>
           </ul>
-          <p class="cart-total">Total: R$ {{ cartTotal.toFixed(2) }}</p>
+          <p class="cart-total">
+            Total: R$ {{ cartTotal.toFixed(2) }}
+            <span v-if="hasPhysicalMediaInCart">(incluindo frete de R$ {{ freightValue }})</span>
+          </p>
           <button @click="finalizePurchase">Finalizar Compra</button>
           <button @click="clearCart">Limpar Carrinho</button>
         </div>
@@ -55,11 +63,13 @@
 
 <script>
 import GameModal from '@/components/GameModal.vue';
+import PurchaseModal from '@/components/PurchaseModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
-    GameModal
+    GameModal,
+    PurchaseModal,
   },
   computed: {
     ...mapGetters(['todosOsJogos'])
@@ -73,6 +83,8 @@ export default {
       selectedGame: "",
       selectedGames: [],
       cartTotal: 0,
+      hasPhysicalMediaInCart: false,
+      freightValue: 5, 
     };
   },
   methods: {
@@ -89,14 +101,11 @@ export default {
       // Implemente o código para lidar com a atualização do jogo aqui
     },
     selectGame(game) {
-      const isAlreadySelected = this.selectedGames.some(g => g.id === game.id);
-
-      if (!isAlreadySelected) {
-        this.selectedGames.push(game);
-        this.cartTotal += game.valor; // Adicione o valor do jogo ao total do carrinho
+      if (game.quantidadeMidiaFisica > 0 || game.quantidadeMidiaDigital > 0) {
+        this.selectedGame = game;
+        this.$refs.purchaseModal.show();
       } else {
-        this.selectedGames = this.selectedGames.filter(g => g.id !== game.id);
-        this.cartTotal -= game.valor; // Subtraia o valor do jogo do total do carrinho
+        alert("Nenhuma mídia disponível para este jogo.");
       }
     },
     isGameSelected(game) {
@@ -110,6 +119,26 @@ export default {
     clearCart() {
       this.selectedGames = [];
       this.cartTotal = 0; // Redefina o total do carrinho
+    },
+    handleAddToCart(payload) {
+      const { game, mediaType } = payload;
+      const gameWithMediaType = { ...game, mediaType };
+
+      if (!this.selectedGames.some(g => g.id === game.id)) {
+        this.selectedGames.push(gameWithMediaType);
+        this.cartTotal += game.valor;
+
+        // Verifica se é a primeira mídia física adicionada ao carrinho
+        if (gameWithMediaType.mediaType === 'fisica') {
+          if (!this.hasPhysicalMediaInCart) {
+            this.cartTotal += this.freightValue;
+            this.hasPhysicalMediaInCart = true;
+          }
+        }
+      }
+    },
+    hasPhysicalMedia() {
+      return this.selectedGames.some(game => game.mediaType === 'fisica');
     },
   },
 
