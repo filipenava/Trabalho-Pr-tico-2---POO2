@@ -6,27 +6,44 @@
       <!-- Conteúdo do Modal -->
       <div v-if="mode === 'details'">
         <!-- Mostra detalhes do jogo -->
-        <p>Nome: {{ editableGame.name }}</p>
-        <p>Gênero: {{ editableGame.genre }}</p>
-        <p>Desenvolvedora: {{ editableGame.developer }}</p>
+        <p>Nome: {{ editableGame.nome }}</p>
+        <p>Gênero: {{ editableGame.genero }}</p>
+        <p>Desenvolvedora: {{ editableGame.desenvolvedor }}</p>
+        <p>Valor: R$ {{ editableGame.valor }}</p>
+        <p>Qtd. Mídia Física: {{ editableGame.quantidadeMidiaFisica }}</p>
+        <p>Qtd. Mídia Digital: {{ editableGame.quantidadeMidiaDigital }}</p>
       </div>
       <div v-if="mode === 'edit' || mode === 'create'">
         <!-- Formulário para edição ou criação -->
         <div class="mb-3">
           <label for="gameName" class="form-label">Nome do Jogo</label>
-          <input type="text" class="form-control" id="gameName" v-model="editableGame.name">
+          <input type="text" class="form-control" id="gameName" v-model="editableGame.nome">
         </div>
         <div class="mb-3">
           <label for="gameGenre" class="form-label">Gênero</label>
-          <select class="form-control" id="gameGenre" v-model="editableGame.genre">
-            <option v-for="genero in generosDisponiveis" :key="genero.id" :value="genero.nome">{{ genero.nome }}</option>
+          <select class="form-control" id="gameGenre" v-model="editableGame.generoId">
+            <option v-for="genero in generosDisponiveis" :key="genero.id" :value="genero.id">{{ genero.nome }}</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="gameDeveloper" class="form-label">Desenvolvedora</label>
-          <select class="form-control" id="gameDeveloper" v-model="editableGame.developer">
-            <option v-for="desenvolvedor in desenvolvedoresDisponiveis" :key="desenvolvedor.id" :value="desenvolvedor.nome">{{ desenvolvedor.nome }}</option>
+          <select class="form-control" id="gameDeveloper" v-model="editableGame.desenvolvedorId">
+            <option v-for="desenvolvedor in desenvolvedoresDisponiveis" :key="desenvolvedor.id" :value="desenvolvedor.id">{{ desenvolvedor.nome }}</option>
           </select>
+        </div>
+        <div class="mb-3">
+          <label for="gameValue" class="form-label">Valor do Jogo</label>
+          <input type="number" class="form-control" id="gameValue" v-model="editableGame.valor">
+        </div>
+        <div class="mb-3 row">
+          <div class="col">
+            <label for="physicalMediaCount" class="form-label">Qtd. de Mídia Física</label>
+            <input type="number" class="form-control" id="physicalMediaCount" v-model="editableGame.quantidadeMidiaFisica">
+          </div>
+          <div class="col">
+            <label for="digitalMediaCount" class="form-label">Qtd. de Mídia Digital</label>
+            <input type="number" class="form-control" id="digitalMediaCount" v-model="editableGame.quantidadeMidiaDigital">
+          </div>
         </div>
       </div>
     </template>
@@ -72,8 +89,11 @@ export default {
       this.$refs.modal.hide();
     },
     submitGame() {
-      // Lógica para submeter o jogo (criar ou editar)
-      this.$emit('updateGame', this.editableGame);
+      let jogoAtualizado = {
+        ...this.editableGame
+      };
+      this.$emit('updateGame', jogoAtualizado);
+      console.log(jogoAtualizado);
       this.hideModal();
     },
     resetModal() {

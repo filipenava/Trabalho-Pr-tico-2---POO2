@@ -24,9 +24,10 @@
         <div class="col-md-4" v-for="game in todosOsJogos" :key="game.id">
           <card class="game-card">
             <template v-slot:header>
-              <h5 class="title" @click="showGameDetails(game)">{{ game.name }}</h5>
-              <p class="sub-title genre" @click="showGameDetails(game)">{{ game.genre }}</p>
-              <p class="sub-title developer" @click="showGameDetails(game)">Desenvolvedora: {{ game.developer }}</p>
+              <h5 class="title" @click="showGameDetails(game)">{{ game.nome }}</h5>
+              <p class="sub-title genre" @click="showGameDetails(game)">{{ game.genero }}</p>
+              <p class="sub-title developer" @click="showGameDetails(game)">Desenvolvedora: {{ game.desenvolvedor }}</p>
+              <p class="game-value">Valor: R$ {{ game.valor }}</p>
               <div class="game-rating">
                 <span class="rating-stars">
                   <template v-for="star in 5">
@@ -75,7 +76,15 @@ export default {
       this.$refs.gameModal.show('edit');
     },
     addNewGame() {
-      this.selectedGame = { id: null, name: '', genre: '', developer: '' }; // Jogo vazio para cadastro
+      this.selectedGame = {
+        id: null,
+        name: '',
+        genre: '',
+        developer: '',
+        valor: 0,
+        quantidadeMidiaFisica: 0,
+        quantidadeMidiaDigital: 0
+      };
       this.$refs.gameModal.show('create');
     },
     addNewGenre() {
