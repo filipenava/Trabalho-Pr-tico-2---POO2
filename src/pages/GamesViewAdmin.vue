@@ -79,8 +79,8 @@ export default {
       this.selectedGame = {
         id: null,
         name: '',
-        genre: '',
-        developer: '',
+        genre: null,
+        developer: null,
         valor: 0,
         quantidadeMidiaFisica: 0,
         quantidadeMidiaDigital: 0

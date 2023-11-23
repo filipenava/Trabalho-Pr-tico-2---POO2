@@ -57,6 +57,12 @@ const store = new Vuex.Store({
     ADICIONAR_JOGO(state, novoJogo) {
       state.jogos.push(novoJogo);
     },
+    ATUALIZAR_JOGO(state, jogoAtualizado) {
+      const index = state.jogos.findIndex(jogo => jogo.id === jogoAtualizado.id);
+      if (index !== -1) {
+        state.jogos.splice(index, 1, jogoAtualizado);
+      }
+    },
     REMOVER_JOGO(state, jogoId) {
       state.jogos = state.jogos.filter(jogo => jogo.id !== jogoId);
     },
@@ -71,6 +77,9 @@ const store = new Vuex.Store({
     // Ações para adicionar ou remover jogos
     adicionarJogo({ commit }, jogo) {
       commit('ADICIONAR_JOGO', jogo);
+    },
+    atualizarJogo({ commit }, jogo) {
+      commit('ATUALIZAR_JOGO', jogo);
     },
     removerJogo({ commit }, jogoId) {
       commit('REMOVER_JOGO', jogoId);
