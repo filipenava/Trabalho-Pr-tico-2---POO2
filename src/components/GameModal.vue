@@ -1,4 +1,4 @@
-<!-- GameModal.vue -->
+<!-- src/components/GameModal.vue -->
 
 <template>
   <b-modal id="gameModal" :title="modalTitle" @hide="resetModal" ref="modal">
@@ -18,11 +18,15 @@
         </div>
         <div class="mb-3">
           <label for="gameGenre" class="form-label">Gênero</label>
-          <input type="text" class="form-control" id="gameGenre" v-model="editableGame.genre">
+          <select class="form-control" id="gameGenre" v-model="editableGame.genre">
+            <option v-for="genero in generosDisponiveis" :key="genero.id" :value="genero.nome">{{ genero.nome }}</option>
+          </select>
         </div>
         <div class="mb-3">
           <label for="gameDeveloper" class="form-label">Desenvolvedora</label>
-          <input type="text" class="form-control" id="gameDeveloper" v-model="editableGame.developer">
+          <select class="form-control" id="gameDeveloper" v-model="editableGame.developer">
+            <option v-for="desenvolvedor in desenvolvedoresDisponiveis" :key="desenvolvedor.id" :value="desenvolvedor.nome">{{ desenvolvedor.nome }}</option>
+          </select>
         </div>
       </div>
     </template>
@@ -35,6 +39,8 @@
 
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: ['editableGame'],
   data() {
@@ -43,6 +49,13 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['generos', 'desenvolvedores']),
+    generosDisponiveis() {
+      return this.generos;
+    },
+    desenvolvedoresDisponiveis() {
+      return this.desenvolvedores;
+    },
     modalTitle() {
       return this.mode === 'edit' ? 'Editar Jogo' : (this.mode === 'create' ? 'Cadastrar Jogo' : 'Detalhes do Jogo');
     }

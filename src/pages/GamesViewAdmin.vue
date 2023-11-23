@@ -6,9 +6,15 @@
     <!-- Modal de confirmação de exclusão -->
     <game-modal ref="gameDeleteModal" :editableGame="selectedGame" @updateGame="handleDeleteGame"></game-modal>
 
+    <!-- Modais para Gênero e Desenvolvedor -->
+    <genre-modal ref="genreModal"></genre-modal>
+    <developer-modal ref="developerModal"></developer-modal>
+
     <!-- Botão para adicionar novo jogo -->
     <div class="container-fluid mb-3">
-      <button class="btn btn-success" @click="addNewGame">Adicionar Novo Jogo</button>
+      <button class="btn btn-success mr-1" @click="addNewGame">+ Jogo</button>
+      <button class="btn btn-info mr-1" @click="addNewGenre">+ Gênero</button>
+      <button class="btn btn-warning mr-1" @click="addNewDeveloper">+ Desenvolvedora</button>
     </div>
 
     <!-- Listagem de Jogos -->
@@ -44,11 +50,15 @@
 
 <script>
 import GameModal from '@/components/GameModal.vue';
+import GenreModal from '@/components/GenreModal.vue';
+import DeveloperModal from '@/components/DeveloperModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
-    GameModal
+    GameModal,
+    GenreModal,
+    DeveloperModal
   },
   computed: {
     ...mapGetters(['todosOsJogos']) // Mapeia o getter para acessar os jogos do Vuex
@@ -67,6 +77,12 @@ export default {
     addNewGame() {
       this.selectedGame = { id: null, name: '', genre: '', developer: '' }; // Jogo vazio para cadastro
       this.$refs.gameModal.show('create');
+    },
+    addNewGenre() {
+      this.$refs.genreModal.show();
+    },
+    addNewDeveloper() {
+      this.$refs.developerModal.show();
     },
     handleUpdateGame(updatedGame) {
       if (updatedGame.id) {
