@@ -9,6 +9,7 @@ import UserRegister from 'src/pages/UserRegister.vue'
 import UserLogin from 'src/pages/UserLogin.vue'
 import GameView from 'src/pages/GamesView.vue'
 import GameViewAdmin from 'src/pages/GamesViewAdmin.vue'
+import Checkout from 'src/pages/Checkout.vue'
 import TableList from 'src/pages/TableList.vue'
 import Typography from 'src/pages/Typography.vue'
 import Icons from 'src/pages/Icons.vue'
@@ -31,6 +32,11 @@ const routes = [
         path: 'overview',
         name: 'Overview',
         component: Overview
+      },
+      {
+        path: 'checkout',
+        name: 'Checkout',
+        component: Checkout
       },
       {
         path: 'game',

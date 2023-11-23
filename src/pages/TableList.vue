@@ -82,7 +82,6 @@ export default {
           });
         });
         this.dadosTabela = dados;
-        console.log(this.dadosTabela);
       } catch (erro) {
         console.error('Erro ao carregar dados:', erro);
       }

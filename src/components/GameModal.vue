@@ -83,7 +83,6 @@ export default {
       this.$nextTick(() => {
         this.$refs.modal.show();
       });
-      console.log(this.mode);
     },
     hideModal() {
       this.$refs.modal.hide();
@@ -92,9 +91,7 @@ export default {
       let jogoAtualizado = {
         ...this.editableGame
       };
-      console.log("Jogo atualizado:", jogoAtualizado); 
       this.$emit('updateGame', jogoAtualizado);
-      console.log("Jogo atualizado 2:",jogoAtualizado);
       this.hideModal();
     },
     resetModal() {

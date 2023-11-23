@@ -51,6 +51,10 @@ const store = new Vuex.Store({
     jogos, // Estado inicial dos jogos
     generos,
     desenvolvedores,
+    carrinho: [],
+    totalCarrinho: 0,
+    hasPhysicalMediaInCart: false,
+    freightValue: 5,
   },
   mutations: {
     // Mutações para alterar o estado dos jogos
@@ -71,6 +75,23 @@ const store = new Vuex.Store({
     },
     ADICIONAR_DESENVOLVEDOR(state, novoDesenvolvedor) {
       state.desenvolvedores.push(novoDesenvolvedor);
+    },
+    ADICIONAR_AO_CARRINHO(state, payload) {
+      const { game, mediaType } = payload;
+      const jogoComMidia = { ...game, mediaType };
+      state.carrinho.push(jogoComMidia);
+      state.totalCarrinho += game.valor;
+
+      if (mediaType === 'fisica' && !state.hasPhysicalMediaInCart) {
+        state.totalCarrinho += state.freightValue;
+        state.hasPhysicalMediaInCart = true;
+      }
+    },
+    // Limpa o carrinho de compras
+    LIMPAR_CARRINHO(state) {
+      state.carrinho = [];
+      state.totalCarrinho = 0;
+      state.hasPhysicalMediaInCart = false;
     }
   },
   actions: {
@@ -93,6 +114,14 @@ const store = new Vuex.Store({
     },
     adicionarDesenvolvedor({ commit }, desenvolvedor) {
       commit('ADICIONAR_DESENVOLVEDOR', desenvolvedor);
+    },
+    adicionarAoCarrinho({ commit }, payload) {
+      commit('ADICIONAR_AO_CARRINHO', payload);
+    },
+
+    // Limpa o carrinho de compras
+    limparCarrinho({ commit }) {
+      commit('LIMPAR_CARRINHO');
     }
   },
   getters: {
@@ -117,7 +146,11 @@ const store = new Vuex.Store({
     },
     desenvolvedores: (state) => {
       return state.desenvolvedores;
-    }
+    },
+    carrinho: state => state.carrinho,
+    totalCarrinho: state => state.totalCarrinho,
+    hasPhysicalMediaInCart: state => state.hasPhysicalMediaInCart,
+    freightValue: state => state.freightValue,
 
   }
 });

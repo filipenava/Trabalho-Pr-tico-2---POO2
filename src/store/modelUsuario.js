@@ -69,5 +69,4 @@ class  Usuario {
 
 const usuario = new Usuario(1, "João", "123.456.789-00", "1234567-8", "1990-01-15", "Rua A, 123", "12345-678", "joao@example.com");
 usuario.setNome("felipe");
-console.log(usuario.getNome());
 

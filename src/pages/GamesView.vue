@@ -72,19 +72,21 @@ export default {
     PurchaseModal,
   },
   computed: {
-    ...mapGetters(['todosOsJogos'])
+    ...mapGetters(['todosOsJogos' , 'carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart' , 'freightValue']),
+    selectedGames() {
+      return this.carrinho;
+    },
+
+    cartTotal() {
+      return this.totalCarrinho;
+    }
   },
   created() {
-    // console.log('created - Store:', this.$store);
     // this.$store.dispatch('games/initGames');
   },
   data() {
     return {
       selectedGame: "",
-      selectedGames: [],
-      cartTotal: 0,
-      hasPhysicalMediaInCart: false,
-      freightValue: 5, 
     };
   },
   methods: {
@@ -112,30 +114,21 @@ export default {
       return this.selectedGames.some(g => g.id === game.id);
     },
     finalizePurchase() {
-      // Aqui você pode adicionar lógica para processar a compra
-      alert('Compra finalizada com sucesso! Total: R$ ' + this.cartTotal.toFixed(2));
-      this.clearCart(); // Esvaziar o carrinho após a compra
-    },
-    clearCart() {
-      this.selectedGames = [];
-      this.cartTotal = 0; // Redefina o total do carrinho
+      if (this.selectedGames.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+      }
+
+      // Você pode adicionar qualquer lógica adicional aqui se necessário
+
+      // Redirecionar para a página de checkout
+      this.$router.push('/admin/checkout');
     },
     handleAddToCart(payload) {
-      const { game, mediaType } = payload;
-      const gameWithMediaType = { ...game, mediaType };
-
-      if (!this.selectedGames.some(g => g.id === game.id)) {
-        this.selectedGames.push(gameWithMediaType);
-        this.cartTotal += game.valor;
-
-        // Verifica se é a primeira mídia física adicionada ao carrinho
-        if (gameWithMediaType.mediaType === 'fisica') {
-          if (!this.hasPhysicalMediaInCart) {
-            this.cartTotal += this.freightValue;
-            this.hasPhysicalMediaInCart = true;
-          }
-        }
-      }
+      this.$store.dispatch('adicionarAoCarrinho', payload);
+    },
+    clearCart() {
+      this.$store.dispatch('limparCarrinho');
     },
     hasPhysicalMedia() {
       return this.selectedGames.some(game => game.mediaType === 'fisica');
