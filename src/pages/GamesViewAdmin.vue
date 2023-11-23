@@ -1,3 +1,4 @@
+<!-- GamesViewAdmin.vue -->
 <template>
   <div class="content">
     <!-- Modal para Jogos -->
@@ -72,12 +73,12 @@ export default {
   methods: {
     ...mapActions(['adicionarJogo', 'removerJogo', 'atualizarJogo']), // Mapeia as ações do Vuex
     editGame(game) {
+      console.log("Editando o jogo com ID:", game); 
       this.selectedGame = JSON.parse(JSON.stringify(game));
       this.$refs.gameModal.show('edit');
     },
     addNewGame() {
       this.selectedGame = {
-        id: null,
         name: '',
         genre: null,
         developer: null,
@@ -94,6 +95,7 @@ export default {
       this.$refs.developerModal.show();
     },
     handleUpdateGame(updatedGame) {
+      console.log("Atualizando o jogo com ID:", updatedGame.id);
       if (updatedGame.id) {
         // Atualiza o jogo existente
         this.atualizarJogo(updatedGame);

@@ -75,9 +75,13 @@ const store = new Vuex.Store({
   },
   actions: {
     // Ações para adicionar ou remover jogos
-    adicionarJogo({ commit }, jogo) {
+    adicionarJogo({ commit, state }, jogo) {
+      if (jogo.id == null) {
+        // Gera um novo ID único para o jogo
+        jogo.id = state.jogos.length + 1;
+      }
       commit('ADICIONAR_JOGO', jogo);
-    },
+    },    
     atualizarJogo({ commit }, jogo) {
       commit('ATUALIZAR_JOGO', jogo);
     },
