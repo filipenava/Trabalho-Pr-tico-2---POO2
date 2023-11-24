@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "cidades-brasil"
-  }
+    "default": "cidades-brasil",
+    "Projeto 2 Poo2": "projeto-2-poo2"
+  },
+  "targets": {},
+  "etags": {}
 }

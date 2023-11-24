@@ -84,6 +84,7 @@
           itens: this.selectedGames,
           total: this.cartTotal,
           metodoPagamento: this.selectedPaymentMethod,
+          temFrete: this.hasShipping,
         };
 
         // Despachar a ação para salvar o pedido no Vuex
