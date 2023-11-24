@@ -55,11 +55,15 @@ const store = new Vuex.Store({
     totalCarrinho: 0,
     hasPhysicalMediaInCart: false,
     freightValue: 5,
+    pedidos: [],
   },
   mutations: {
     // Mutações para alterar o estado dos jogos
     ADICIONAR_JOGO(state, novoJogo) {
       state.jogos.push(novoJogo);
+    },
+    ADICIONAR_PEDIDO(state, novoPedido) {
+      state.pedidos.push(novoPedido);
     },
     ATUALIZAR_JOGO(state, jogoAtualizado) {
       const index = state.jogos.findIndex(jogo => jogo.id === jogoAtualizado.id);
@@ -92,7 +96,14 @@ const store = new Vuex.Store({
       state.carrinho = [];
       state.totalCarrinho = 0;
       state.hasPhysicalMediaInCart = false;
-    }
+    },
+    ATUALIZAR_STATUS_PEDIDO(state, payload) {
+      const { id, status } = payload;
+      const pedidoIndex = state.pedidos.findIndex(pedido => pedido.id === id);
+      if (pedidoIndex !== -1) {
+        Vue.set(state.pedidos[pedidoIndex], 'status', status);
+      }
+    },
   },
   actions: {
     // Ações para adicionar ou remover jogos
@@ -118,8 +129,12 @@ const store = new Vuex.Store({
     adicionarAoCarrinho({ commit }, payload) {
       commit('ADICIONAR_AO_CARRINHO', payload);
     },
-
-    // Limpa o carrinho de compras
+    salvarPedido({ commit, state }, pedido) { 
+      commit('ADICIONAR_PEDIDO', pedido);
+    },
+    atualizarStatusPedido({ commit }, payload) {
+      commit('ATUALIZAR_STATUS_PEDIDO', payload);
+    },
     limparCarrinho({ commit }) {
       commit('LIMPAR_CARRINHO');
     }
@@ -151,7 +166,7 @@ const store = new Vuex.Store({
     totalCarrinho: state => state.totalCarrinho,
     hasPhysicalMediaInCart: state => state.hasPhysicalMediaInCart,
     freightValue: state => state.freightValue,
-
+    getPedidos: state => state.pedidos,
   }
 });
 

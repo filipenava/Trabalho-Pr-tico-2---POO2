@@ -10,6 +10,9 @@ import UserLogin from 'src/pages/UserLogin.vue'
 import GameView from 'src/pages/GamesView.vue'
 import GameViewAdmin from 'src/pages/GamesViewAdmin.vue'
 import Checkout from 'src/pages/Checkout.vue'
+import Reports from 'src/pages/Reports.vue'
+import OrderList from 'src/pages/OrderList.vue'
+import OrderListAdmin from 'src/pages/OrderListAdmin.vue'
 import TableList from 'src/pages/TableList.vue'
 import Typography from 'src/pages/Typography.vue'
 import Icons from 'src/pages/Icons.vue'
@@ -47,6 +50,21 @@ const routes = [
         path: 'game-admin',
         name: 'GameAdmin',
         component: GameViewAdmin
+      },
+      {
+        path: 'reports',
+        name: 'Reports',
+        component: Reports
+      },
+      {
+        path: 'order-list',
+        name: 'Order List',
+        component: OrderList
+      },
+      {
+        path: 'order-list-admin',
+        name: 'Order List Admin',
+        component: OrderListAdmin
       },
       {
         path: 'user',

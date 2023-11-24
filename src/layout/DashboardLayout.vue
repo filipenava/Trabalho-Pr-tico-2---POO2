@@ -10,9 +10,21 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Games Admin</p>
       </sidebar-link>
+      <sidebar-link to="/admin/order-list-admin">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Pedidos Admin</p>
+      </sidebar-link>
       <sidebar-link to="/admin/game">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Games Cliente</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/order-list">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Pedidos Cliente</p>
+      </sidebar-link>
+      <sidebar-link to="/admin/reports">
+        <i class="nc-icon nc-chart-pie-35"></i>
+        <p>Relatórios</p>
       </sidebar-link>
       <sidebar-link to="/admin/register">
         <i class="nc-icon nc-circle-09"></i>
