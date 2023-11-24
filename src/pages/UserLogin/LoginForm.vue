@@ -1,3 +1,4 @@
+<!-- src/pages/UserLogin/LoginForm.vue -->
 <template>
   <card>
     <h4 slot="header" class="card-title text-center">Login</h4>
@@ -13,6 +14,9 @@
                   placeholder="Digite sua senha"
                   v-model="user.password">
       </base-input>
+      <div v-if="loginError" class="error-message">
+        Email ou senha incorretos. Por favor, tente novamente.
+      </div>
 
       <div class="text-center">
         <button type="submit" class="btn btn-primary btn-fill">Entrar</button>
@@ -27,6 +31,7 @@
 
 <script>
 import Card from 'src/components/Cards/Card.vue'
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -37,20 +42,37 @@ export default {
       user: {
         email: '',
         password: ''
-      }
+      },
+      loginError: false
     }
+  },
+  computed: {
+    ...mapGetters(['todosOsUsuarios'])
+    
+  },
+  created () {
+    console.log(this.todosOsUsuarios);
   },
   methods: {
     loginUser () {
-      // Implementar lógica de login do usuário aqui
-      alert('Login efetuado: ' + JSON.stringify(this.user))
+      const usuarioEncontrado = this.todosOsUsuarios.find(u => u.email === this.user.email && u.password === this.user.password);
+      if (usuarioEncontrado) {
+        this.loginError = false;
+        alert('Login efetuado com sucesso!');
+        // Redirecione para a página inicial
+        this.$router.push('/'); // Substitua '/pagina-inicial' pelo caminho correto
+      } else {
+        this.loginError = true;
+        alert('Erro: Email ou senha inválidos!');
+      }
     },
     recoverPassword() {
       // Implementar navegação/recuperação de senha
     },
     navigateToRegister() {
-      // Implementar navegação para tela de cadastro
-    }
+      this.$router.push('/admin/register');
+    },
+    
   }
 }
 </script>

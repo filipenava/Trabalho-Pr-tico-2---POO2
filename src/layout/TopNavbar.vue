@@ -32,12 +32,12 @@
             <a class="dropdown-item" href="#">Notification 4</a>
             <a class="dropdown-item" href="#">Another notification</a>
           </base-dropdown> -->
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nc-icon nc-zoom-split"></i>
               <span class="d-lg-block">&nbsp;Busca</span>
             </a>
-          </li>
+          </li> -->
         </ul>
         <ul class="navbar-nav ml-auto">
           <!-- <li class="nav-item">
@@ -54,11 +54,11 @@
             <div class="divider"></div>
             <a class="dropdown-item" href="#">Separated link</a>
           </base-dropdown> -->
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               Sair
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

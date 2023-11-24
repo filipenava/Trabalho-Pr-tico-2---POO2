@@ -1,3 +1,4 @@
+<!-- src/pages/UserRegister/RegisterUserForm.vue -->
 <template>
   <card>
     <h4 slot="header" class="card-title text-center">Cadastro de Usuário</h4>
@@ -6,6 +7,36 @@
                   label="Nome"
                   placeholder="Digite seu nome"
                   v-model="newUser.name">
+      </base-input>
+
+      <base-input type="text"
+                  label="CPF"
+                  placeholder="Digite seu CPF"
+                  v-model="newUser.cpf">
+      </base-input>
+
+      <base-input type="text"
+                  label="RG"
+                  placeholder="Digite seu RG"
+                  v-model="newUser.rg">
+      </base-input>
+
+      <base-input type="date"
+                  label="Data de Nascimento"
+                  placeholder="Digite sua data de nascimento"
+                  v-model="newUser.dataNascimento">
+      </base-input>
+
+      <base-input type="text"
+                  label="Endereço"
+                  placeholder="Digite seu endereço"
+                  v-model="newUser.endereco">
+      </base-input>
+
+      <base-input type="text"
+                  label="CEP"
+                  placeholder="Digite seu CEP"
+                  v-model="newUser.cep">
       </base-input>
 
       <base-input type="email"
@@ -26,8 +57,6 @@
                   v-model="newUser.confirmPassword">
       </base-input>
 
-      <!-- Outros campos podem ser adicionados aqui -->
-
       <div class="text-center">
         <button type="submit" class="btn btn-success btn-fill">Cadastrar</button>
       </div>
@@ -37,6 +66,7 @@
 
 <script>
 import Card from 'src/components/Cards/Card.vue'
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -45,19 +75,53 @@ export default {
   data () {
     return {
       newUser: {
+        id: '',
         name: '',
+        cpf: '',
+        rg: '',
+        dataNascimento: '',
+        endereco: '',
+        cep: '',
         email: '',
         password: '',
-        confirmPassword: ''
-        // Outros campos podem ser adicionados aqui
+        confirmPassword: '',
       }
     }
   },
+  computed: {
+    ...mapGetters(['todosOsUsuarios'])
+  },
   methods: {
-    registerUser () {
-      // Implementar lógica de cadastro do usuário aqui
-      alert('Novo usuário cadastrado: ' + JSON.stringify(this.newUser))
+    ...mapActions(['adicionarUsuario']),
+    newId() {
+      let newid = Math.random().toString(36).substr(2, 9);
+      this.newUser.id = newid;
+    },
+    registerUser() {
+      this.newId();
+      const usuarioData = {
+        // Mapeie os dados do formulário para o formato esperado pela classe Usuario
+        id: this.newUser.id,
+        nome: this.newUser.name,
+        cpf: this.newUser.cpf,
+        rg: this.newUser.rg,
+        dataNascimento: this.newUser.dataNascimento,
+        endereco: this.newUser.endereco,
+        cep: this.newUser.cep,
+        email: this.newUser.email,
+        password: this.newUser.password,
+      };
+      console.log(usuarioData);
+      this.adicionarUsuario(usuarioData);
+      // alert('Novo usuário cadastrado: ' + JSON.stringify(usuarioData));
+    },
+    testarComunicacaoVuex() {
+      console.log("Usuários atuais no Vuex:", this.todosOsUsuarios);
+      // Aqui você pode adicionar mais lógica de teste se necessário
     }
+  },
+  mounted() {
+    this.testarComunicacaoVuex();
   }
 }
 </script>

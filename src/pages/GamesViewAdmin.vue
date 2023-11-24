@@ -63,7 +63,7 @@ export default {
     DeveloperModal
   },
   computed: {
-    ...mapGetters(['todosOsJogos']) // Mapeia o getter para acessar os jogos do Vuex
+    ...mapGetters('jogos',['todosOsJogos']) 
   },
   data() {
     return {
@@ -71,7 +71,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['adicionarJogo', 'removerJogo', 'atualizarJogo']), // Mapeia as ações do Vuex
+    ...mapActions('jogos',['adicionarJogo', 'removerJogo', 'atualizarJogo']), 
     editGame(game) {
       this.selectedGame = JSON.parse(JSON.stringify(game));
       this.$refs.gameModal.show('edit');

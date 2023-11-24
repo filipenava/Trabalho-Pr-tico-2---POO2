@@ -72,7 +72,9 @@ export default {
     PurchaseModal,
   },
   computed: {
-    ...mapGetters(['todosOsJogos' , 'carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart' , 'freightValue']),
+    ...mapGetters('jogos', ['todosOsJogos']),
+    ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue']),
+
     selectedGames() {
       return this.carrinho;
     },
@@ -82,7 +84,8 @@ export default {
     }
   },
   created() {
-    // this.$store.dispatch('games/initGames');
+ 
+      console.log(this.$store.state);
   },
   data() {
     return {
