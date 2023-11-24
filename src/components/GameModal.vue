@@ -66,7 +66,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['generos', 'desenvolvedores']),
+    ...mapGetters(['desenvolvedores']),
+    ...mapGetters('jogos', ['generos']),
     generosDisponiveis() {
       return this.generos;
     },

@@ -1,5 +1,5 @@
 <template>
-  <!-- <ul class="nav nav-mobile-menu"> -->
+  <ul class="nav nav-mobile-menu">
     <!-- <base-dropdown>
       <template slot="title">
         <i class="fa fa-globe"></i>
@@ -27,16 +27,23 @@
       <a class="dropdown-item" href="#">Separated link</a>
     </base-dropdown> -->
 
-    <!-- <li class="nav-item">
-      <a class="nav-link" href="#pablo">
+    <li class="nav-item">
+      <a class="nav-link"  @click="deslogar">
         <span class="no-icon">Sair</span>
       </a>
-    </li> -->
-  <!-- </ul> -->
+    </li>
+  </ul>
 </template>
 <script>
   export default {
-    name: 'mobile-menu'
+    name: 'mobile-menu',
+    methods: {
+      deslogar() {
+        this.$store.dispatch('deslogarUsuario');
+        alert('Usuário saiu do sistema!');
+        this.$router.push('/login'); // Redireciona o usuário para a página de login após deslogar
+      },
+    }
   }
 </script>
 <style>

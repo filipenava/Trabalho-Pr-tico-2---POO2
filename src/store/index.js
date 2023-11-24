@@ -4,17 +4,11 @@ import Vuex from 'vuex';
 import usuarios from './modules/usuarios';
 import jogos from './modules/jogos';
 
+
 // Informa ao Vue para usar o Vuex
 Vue.use(Vuex);
 
-  // Array de Gêneros
-  const generos = [
-        { id: 1, nome: "RPG" },
-        { id: 2, nome: "Corrida" },
-        { id: 3, nome: "Aventura" },
-        { id: 4, nome: "Esporte" },
-        { id: 5, nome: "Ação" }
-  ];
+ 
 
   // Array de Desenvolvedores
   const desenvolvedores = [
@@ -38,23 +32,26 @@ const store = new Vuex.Store({
   modules: {
     usuarios,
     jogos,
+
   },
   state: {
-    generos,
     desenvolvedores,
     carrinho: [],
     totalCarrinho: 0,
     hasPhysicalMediaInCart: false,
     freightValue: 5,
     pedidos: [],
+    usuarioLogado: null,
   },
   mutations: {
-    ADICIONAR_PEDIDO(state, novoPedido) {
-      state.pedidos.push(novoPedido);
-    },
-    ADICIONAR_GENERO(state, novoGenero) {
-      state.generos.push(novoGenero);
-    },
+    DEFINIR_USUARIO_LOGADO(state, usuario) {
+      console.log('Mutation DEFINIR_USUARIO_LOGADO chamada com:', usuario);
+    state.usuarioLogado = usuario;
+  },
+  DESLOGAR_USUARIO(state) {
+      console.log('Deslogando usuário');
+    state.usuarioLogado = null;
+  },
     ADICIONAR_DESENVOLVEDOR(state, novoDesenvolvedor) {
       state.desenvolvedores.push(novoDesenvolvedor);
     },
@@ -82,11 +79,23 @@ const store = new Vuex.Store({
         Vue.set(state.pedidos[pedidoIndex], 'status', status);
       }
     },
+    ADICIONAR_PEDIDO(state, novoPedido) {
+      state.pedidos.push(novoPedido);
+    },
   },
   actions: {
-    adicionarGenero({ commit }, genero) {
-      commit('ADICIONAR_GENERO', genero);
-    },
+    logarUsuario({ commit }, credenciais) {
+      console.log('Ação logarUsuario chamada com credenciais:', credenciais);
+    // Simulando uma autenticação bem-sucedida:
+    const usuarioMock = { id: '123', nome: 'Usuário Teste', email: 'teste@example.com' };
+    commit('DEFINIR_USUARIO_LOGADO', usuarioMock);
+
+    // Em caso de erro, você pode lidar com isso aqui (ex: mostrar uma mensagem de erro)
+  },
+  deslogarUsuario({ commit }) {
+      console.log('Deslogando usuário...');
+    commit('DESLOGAR_USUARIO');
+  },
     adicionarDesenvolvedor({ commit }, desenvolvedor) {
       commit('ADICIONAR_DESENVOLVEDOR', desenvolvedor);
     },
@@ -104,9 +113,8 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    generos: (state) => {
-      return state.generos;
-    },
+    estaLogado: state => state.usuarioLogado !== null,
+    usuarioLogado: state => state.usuarioLogado,
     desenvolvedores: (state) => {
       return state.desenvolvedores;
     },
@@ -115,6 +123,7 @@ const store = new Vuex.Store({
     hasPhysicalMediaInCart: state => state.hasPhysicalMediaInCart,
     freightValue: state => state.freightValue,
     getPedidos: state => state.pedidos,
+    
   }
 });
 

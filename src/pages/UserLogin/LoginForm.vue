@@ -55,12 +55,15 @@ export default {
   },
   methods: {
     loginUser () {
+      console.log('Tentando fazer login com:', this.user.email);
       const usuarioEncontrado = this.todosOsUsuarios.find(u => u.email === this.user.email && u.password === this.user.password);
       if (usuarioEncontrado) {
         this.loginError = false;
         alert('Login efetuado com sucesso!');
-        // Redirecione para a página inicial
-        this.$router.push('/'); // Substitua '/pagina-inicial' pelo caminho correto
+        console.log('Usuário encontrado, despachando ação de login');
+        this.$store.dispatch('logarUsuario', usuarioEncontrado);
+
+        this.$router.push('/'); 
       } else {
         this.loginError = true;
         alert('Erro: Email ou senha inválidos!');

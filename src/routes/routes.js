@@ -1,3 +1,9 @@
+// src/routes/routes.js
+
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from '../store';
+
 import DashboardLayout from '../layout/DashboardLayout.vue'
 // GeneralViews
 import NotFound from '../pages/NotFoundPage.vue'
@@ -14,17 +20,20 @@ import Reports from 'src/pages/Reports.vue'
 import OrderList from 'src/pages/OrderList.vue'
 import OrderListAdmin from 'src/pages/OrderListAdmin.vue'
 import TableList from 'src/pages/TableList.vue'
-import Typography from 'src/pages/Typography.vue'
-import Icons from 'src/pages/Icons.vue'
-import Maps from 'src/pages/Maps.vue'
-import Notifications from 'src/pages/Notifications.vue'
-import Upgrade from 'src/pages/Upgrade.vue'
+
+Vue.use(Router);
 
 const routes = [
   {
     path: '/',
     component: DashboardLayout,
-    redirect: '/admin/game'
+    redirect: '/admin/game',
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/login',
+    name: 'AdminLogin',
+    component: UserLogin
   },
   {
     path: '/admin',
@@ -34,42 +43,50 @@ const routes = [
       {
         path: 'overview',
         name: 'Overview',
-        component: Overview
+        component: Overview,
+        meta: { requiresAuth: true }
       },
       {
         path: 'checkout',
         name: 'Checkout',
-        component: Checkout
+        component: Checkout,
+        meta: { requiresAuth: true }
       },
       {
         path: 'game',
         name: 'Game',
-        component: GameView
+        component: GameView,
+        meta: { requiresAuth: true }
       },
       {
         path: 'game-admin',
         name: 'GameAdmin',
-        component: GameViewAdmin
+        component: GameViewAdmin,
+        meta: { requiresAuth: true }
       },
       {
         path: 'reports',
         name: 'Reports',
-        component: Reports
+        component: Reports,
+        meta: { requiresAuth: true }
       },
       {
         path: 'order-list',
         name: 'Order List',
-        component: OrderList
+        component: OrderList,
+        meta: { requiresAuth: true }
       },
       {
         path: 'order-list-admin',
         name: 'Order List Admin',
-        component: OrderListAdmin
+        component: OrderListAdmin,
+        meta: { requiresAuth: true }
       },
       {
         path: 'user',
         name: 'User',
-        component: UserProfile
+        component: UserProfile,
+        meta: { requiresAuth: true }
       },
       {
         path: 'register',
@@ -84,37 +101,50 @@ const routes = [
       {
         path: 'table-list',
         name: 'Table List',
-        component: TableList
+        component: TableList,
+        meta: { requiresAuth: true }
       },
-      {
-        path: 'typography',
-        name: 'Typography',
-        component: Typography
-      },
-      {
-        path: 'icons',
-        name: 'Icons',
-        component: Icons
-      },
-      {
-        path: 'maps',
-        name: 'Maps',
-        component: Maps
-      },
-      {
-        path: 'notifications',
-        name: 'Notifications',
-        component: Notifications
-      },
-      {
-        path: 'upgrade',
-        name: 'Upgrade to PRO',
-        component: Upgrade
-      }
+
     ]
   },
   { path: '*', component: NotFound }
 ]
+
+const router = new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes,
+  linkActiveClass: "nav-item active",
+  scrollBehavior: (to) => {
+    if (to.hash) {
+      return { selector: to.hash };
+    } else {
+      return { x: 0, y: 0 };
+    }
+  },
+});
+
+
+router.beforeEach((to, from, next) => {
+  console.log('Navegação detectada de', from.path, 'para', to.path);
+// Lógica de autenticação
+if (to.matched.some(record => record.meta.requiresAuth)) {
+  console.log('Esta rota requer autenticação:', to.path);
+  if (!store.getters['estaLogado']) {
+      console.log('Usuário não está logado. Redirecionando para login...');
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    });
+  } else {
+      console.log('Usuário logado. Acesso permitido.');
+    next();
+  }
+} else {
+  console.log('Esta rota não requer autenticação. Acesso permitido.');
+  next();
+}
+});
 
 /**
  * Asynchronously load view (Webpack Lazy loading compatible)
@@ -125,4 +155,4 @@ function view(name) {
    return res;
 };**/
 
-export default routes
+export default router

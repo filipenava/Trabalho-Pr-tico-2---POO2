@@ -54,11 +54,11 @@
             <div class="divider"></div>
             <a class="dropdown-item" href="#">Separated link</a>
           </base-dropdown> -->
-          <!-- <li class="nav-item">
-            <a href="#" class="nav-link">
+          <li class="nav-item">
+            <a href="#" class="nav-link" @click="deslogar">
               Sair
             </a>
-          </li> -->
+          </li>
         </ul>
       </div>
     </div>
@@ -78,6 +78,11 @@
       }
     },
     methods: {
+      deslogar() {
+        this.$store.dispatch('deslogarUsuario');
+        alert('Usuário saiu do sistema!');
+        this.$router.push('/login'); // Redireciona o usuário para a página de login após deslogar
+      },
       capitalizeFirstLetter (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       },

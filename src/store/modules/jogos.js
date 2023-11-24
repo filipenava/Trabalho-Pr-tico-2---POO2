@@ -18,9 +18,18 @@ const jogos = [
   { id: 12, nome: "Sonic", generoId: 1, desenvolvedorId: 10, rating: 5, valor: 8,  quantidadeMidiaFisica: 0,  quantidadeMidiaDigital: 0 }
 ];
 
+ // Array de Gêneros
+ const generos = [
+  { id: 1, nome: "RPG" },
+  { id: 2, nome: "Corrida" },
+  { id: 3, nome: "Aventura" },
+  { id: 4, nome: "Esporte" },
+  { id: 5, nome: "Ação" }
+];
+
 const state = {
   jogos: jogos, // Estado inicial dos jogos
-  generos: [],
+  generos: generos,
   desenvolvedores: [],
 };
 
@@ -37,6 +46,10 @@ const mutations = {
   REMOVER_JOGO(state, jogoId) {
     state.jogos = state.jogos.filter(jogo => jogo.id !== jogoId);
   },
+  
+  ADICIONAR_GENERO(state, novoGenero) {
+    state.generos.push(novoGenero);
+  },
 };
 
 const actions = {
@@ -52,6 +65,9 @@ const actions = {
   },
   removerJogo({ commit }, jogoId) {
     commit('REMOVER_JOGO', jogoId);
+  },
+  adicionarGenero({ commit }, genero) {
+    commit('ADICIONAR_GENERO', genero);
   },
 };
 
@@ -70,6 +86,9 @@ const getters = {
   },
   jogoPorId: (state) => (id) => {
     return state.jogos.find(jogo => jogo.id === id);
+  },
+  generos: (state) => {
+    return state.generos;
   },
 };
 

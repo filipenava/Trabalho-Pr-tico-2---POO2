@@ -91,11 +91,9 @@ export default {
   computed: {
     ...mapGetters(['todosOsUsuarios']),
     isFormValid() {
-      const valid = this.newUser.name && this.newUser.cpf && this.newUser.rg && this.newUser.dataNascimento &&
-                    this.newUser.endereco && this.newUser.cep && this.newUser.email &&
-                    this.newUser.password && this.newUser.confirmPassword;
-      console.log('Formulário válido:', valid);
-      return valid;
+      return this.newUser.name && this.newUser.cpf && this.newUser.rg && this.newUser.dataNascimento &&
+            this.newUser.endereco && this.newUser.cep && this.newUser.email &&
+            this.newUser.password && (this.newUser.password === this.newUser.confirmPassword);
     }
   },
   methods: {

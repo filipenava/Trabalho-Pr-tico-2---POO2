@@ -72,8 +72,8 @@ export default {
     PurchaseModal,
   },
   computed: {
-    ...mapGetters('jogos', ['todosOsJogos']),
-    ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue']),
+    ...mapGetters('jogos', ['todosOsJogos', 'generos']),
+    ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue', ]),
 
     selectedGames() {
       return this.carrinho;

@@ -25,7 +25,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['adicionarGenero']),
+    ...mapActions('jogos',['adicionarGenero']),
     submitGenre() {
       this.adicionarGenero({ id: Date.now(), nome: this.genreName }); // Usando Date.now() para gerar um ID temporário
       this.hideModal();

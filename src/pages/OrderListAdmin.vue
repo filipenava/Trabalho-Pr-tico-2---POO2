@@ -49,7 +49,6 @@
         ...mapGetters(['getPedidos']),
         orders() {
         let pedidos = this.$store.getters.getPedidos;
-        console.log(pedidos); // Adicionado console.log aqui
         return pedidos;
         },
     },
