@@ -58,7 +58,7 @@
       </base-input>
 
       <div class="text-center">
-        <button type="submit" class="btn btn-success btn-fill">Cadastrar</button>
+        <button type="submit" class="btn btn-success btn-fill"  :disabled="!isFormValid">Cadastrar</button>
       </div>
     </form>
   </card>
@@ -89,7 +89,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['todosOsUsuarios'])
+    ...mapGetters(['todosOsUsuarios']),
+    isFormValid() {
+      const valid = this.newUser.name && this.newUser.cpf && this.newUser.rg && this.newUser.dataNascimento &&
+                    this.newUser.endereco && this.newUser.cep && this.newUser.email &&
+                    this.newUser.password && this.newUser.confirmPassword;
+      console.log('Formulário válido:', valid);
+      return valid;
+    }
   },
   methods: {
     ...mapActions(['adicionarUsuario']),
@@ -113,7 +120,8 @@ export default {
       };
       console.log(usuarioData);
       this.adicionarUsuario(usuarioData);
-      // alert('Novo usuário cadastrado: ' + JSON.stringify(usuarioData));
+      alert('Usuário cadastrado com sucesso! Redirecionando para o login...');
+      this.$router.push('/admin/login');
     },
     testarComunicacaoVuex() {
       console.log("Usuários atuais no Vuex:", this.todosOsUsuarios);
