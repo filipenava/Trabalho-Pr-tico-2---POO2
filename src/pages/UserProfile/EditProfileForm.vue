@@ -1,28 +1,22 @@
+<!-- src/pages/UserProfile/EditProfileForm.vue -->
+
 <template>
   <card>
     <h4 slot="header" class="card-title">Editar Perfil</h4>
     <form>
       <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
           <base-input type="text"
-                    label="Empresa"
-                    :disabled="true"
-                    placeholder="Painel Light"
-                    v-model="user.company">
+                    label="Nome Completo"
+                    placeholder="Nome Completo"
+                    v-model="user.nome">
           </base-input>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
           <base-input type="text"
-                    label="Nome de Usuário"
-                    placeholder="Nome de Usuário"
-                    v-model="user.username">
-          </base-input>
-        </div>
-        <div class="col-md-4">
-          <base-input type="email"
-                    label="Email"
-                    placeholder="Email"
-                    v-model="user.email">
+                    label="CPF"
+                    placeholder="CPF"
+                    v-model="user.cpf">
           </base-input>
         </div>
       </div>
@@ -30,16 +24,16 @@
       <div class="row">
         <div class="col-md-6">
           <base-input type="text"
-                    label="Primeiro Nome"
-                    placeholder="Primeiro Nome"
-                    v-model="user.firstName">
+                    label="RG"
+                    placeholder="RG"
+                    v-model="user.rg">
           </base-input>
         </div>
         <div class="col-md-6">
           <base-input type="text"
-                    label="Sobrenome"
-                    placeholder="Sobrenome"
-                    v-model="user.lastName">
+                    label="Data de Nascimento"
+                    placeholder="Data de Nascimento"
+                    v-model="user.dataNascimento">
           </base-input>
         </div>
       </div>
@@ -48,47 +42,48 @@
         <div class="col-md-12">
           <base-input type="text"
                     label="Endereço"
-                    placeholder="Endereço Residencial"
-                    v-model="user.address">
+                    placeholder="Endereço"
+                    v-model="user.endereco">
           </base-input>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <base-input type="text"
-                    label="Cidade"
-                    placeholder="Cidade"
-                    v-model="user.city">
-          </base-input>
-        </div>
-        <div class="col-md-4">
-          <base-input type="text"
-                    label="País"
-                    placeholder="País"
-                    v-model="user.country">
-          </base-input>
-        </div>
-        <div class="col-md-4">
-          <base-input type="number"
-                    label="Código Postal"
+                    label="CEP"
                     placeholder="CEP"
-                    v-model="user.postalCode">
+                    v-model="user.cep">
           </base-input>
         </div>
+        <div class="col-md-6">
+          <base-input type="email"
+                    label="Email"
+                    placeholder="Email"
+                    v-model="user.email">
+          </base-input>
+        </div>
+        
       </div>
 
       <div class="row">
-        <div class="col-md-12">
-          <div class="form-group">
-            <label>Sobre Mim</label>
-            <textarea rows="5" class="form-control border-input"
-                      placeholder="Aqui pode ser a sua descrição"
-                      v-model="user.aboutMe">
-              </textarea>
-          </div>
+        <div class="col-md-6">
+          <base-input type="password"
+                      label="Senha"
+                      placeholder="Senha"
+                      v-model="user.password">
+          </base-input>
+        </div>
+
+        <div class="col-md-6">
+          <label for="papel">Função</label>
+          <select class="form-control" id="papel" v-model="user.papel">
+            <option value="cliente">Cliente</option>
+            <option value="gerente">Gerente</option>
+          </select>
         </div>
       </div>
+
       <div class="text-center">
         <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="updateProfile">
           Atualizar Perfil
@@ -100,30 +95,35 @@
 </template>
 <script>
   import Card from 'src/components/Cards/Card.vue'
+  import { mapGetters, mapActions } from 'vuex';
+
 
   export default {
     components: {
       Card
     },
+    computed: {
+      ...mapGetters(['usuarioLogado'])
+    },
     data () {
       return {
-        user: {
-          company: 'FCT UNESP',
-          username: 'matl23',
-          email: '',
-          firstName: 'Matheus',
-          lastName: 'Augusto',
-          address: 'São Paulo, Brasil',
-          city: 'São Paulo',
-          country: 'Brasil',
-          postalCode: '',
-          aboutMe: `Ciencia da Computação POO 2 Prof. Bruno`
-        }
+
       }
     },
+    created() {
+      this.user = this.$store.getters.usuarioLogado;
+    },
     methods: {
+      ...mapActions(['atualizarUsuario']),
       updateProfile () {
-        alert('Seus dados: ' + JSON.stringify(this.user))
+        // Atualiza o usuário no Vuex store
+        this.atualizarUsuario(this.user).then(() => {
+          // Exibe uma mensagem confirmando a atualização
+          alert('Perfil atualizado com sucesso!');
+        }).catch(error => {
+          // Trata erros, caso haja
+          alert('Erro ao atualizar o perfil: ' + error.message);
+        });
       }
     }
   }

@@ -60,6 +60,20 @@ export default {
         return false;
       }
     },
+    atualizarUsuario({ commit, state }, usuarioAtualizado) {
+      return new Promise((resolve, reject) => {
+        // Encontra o índice do usuário no array
+        const index = state.usuarios.findIndex(user => user.id === usuarioAtualizado.id);
+        if (index !== -1) {
+          // Atualiza o usuário no array
+          state.usuarios.splice(index, 1, usuarioAtualizado);
+          commit('SET_USUARIO_LOGADO', usuarioAtualizado); // Atualiza o usuário logado
+          resolve();
+        } else {
+          reject(new Error('Usuário não encontrado'));
+        }
+      });
+    }
   },
   getters: {
     todosOsUsuarios: state => state.usuarios,
