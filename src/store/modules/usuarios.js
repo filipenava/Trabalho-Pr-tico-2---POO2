@@ -24,7 +24,6 @@ export default {
     ADICIONAR_USUARIO(state, usuario) {
       state.usuarios.push(usuario);
       console.log('Mutation DEFINIR_USUARIO_LOGADO chamada com:', usuario);
-    state.usuarioLogado = usuario;
     },
     DEFINIR_USUARIO_LOGADO(state, usuarioId) {
       state.usuarioLogadoId = usuarioId;

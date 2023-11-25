@@ -122,14 +122,7 @@ export default {
       alert('Usuário cadastrado com sucesso! Redirecionando para o login...');
       this.$router.push('/');
     },
-    testarComunicacaoVuex() {
-      console.log("Usuários atuais no Vuex:", this.todosOsUsuarios);
-      // Aqui você pode adicionar mais lógica de teste se necessário
-    }
   },
-  mounted() {
-    this.testarComunicacaoVuex();
-  }
 }
 </script>
 

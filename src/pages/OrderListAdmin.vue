@@ -121,7 +121,7 @@ h2 {
   .card-header {
     font-size: 16px; /* Aumenta o tamanho da fonte do cabeçalho do card */
     font-weight: bold;
-    background-color: #4CAF50;
+    background-color: #4CAF50 !important;
     color: white;
     padding: 10px 15px;
     border-radius: 5px 5px 0 0;

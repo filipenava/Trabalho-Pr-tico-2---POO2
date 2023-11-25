@@ -128,10 +128,10 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // Se o usuário está logado e tenta acessar a página de login,
   // redireciona para a página de games.
-  // if (store.getters['estaLogado'] && to.path === '/admin/login') {
-  //   next({ path: '/admin/game' });
-  //   return;
-  // }
+  if (store.getters['estaLogado'] && to.path === '/admin/login') {
+    next({ path: '/admin/game' });
+    return;
+  }
 
   // Verifica se a rota requer autenticação
   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -144,7 +144,7 @@ router.beforeEach((to, from, next) => {
         if (store.getters['usuarioPapel'] === 'gerente') {
           next();
         } else {
-          
+          next({ path: '/' }); 
         }
       } else {
         next();
