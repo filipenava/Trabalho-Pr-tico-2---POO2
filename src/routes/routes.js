@@ -126,19 +126,25 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-  console.log('esse', store.getters['estaLogado']);
+  // Se o usuário está logado e tenta acessar a página de login,
+  // redireciona para a página de games.
+  // if (store.getters['estaLogado'] && to.path === '/admin/login') {
+  //   next({ path: '/admin/game' });
+  //   return;
+  // }
+
+  // Verifica se a rota requer autenticação
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Se o usuário não está logado, redireciona para o login
     if (!store.getters['estaLogado']) {
-      next({
-        path: '/admin/login',
-        query: { redirect: to.fullPath }
-      });
+      next({ path: '/admin/login' });
     } else {
+      // Verifica se a rota requer papel de gerente
       if (to.matched.some(record => record.meta.requiresAdmin)) {
         if (store.getters['usuarioPapel'] === 'gerente') {
           next();
         } else {
-          next({ path: '/' }); 
+          
         }
       } else {
         next();
@@ -148,6 +154,7 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
 
 
 /**

@@ -36,6 +36,7 @@ export default {
     DESLOGAR_USUARIO(state) {
       state.usuarioLogado = null;
       state.usuarioLogadoId = null;
+      localStorage.removeItem('usuarioLogado');
     },
   },
   actions: {
@@ -54,6 +55,7 @@ export default {
   
       if (usuario) {
         context.commit('SET_USUARIO_LOGADO', usuario);
+        localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
         return true;
       } else {
         return false;
