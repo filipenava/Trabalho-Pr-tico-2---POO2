@@ -47,21 +47,25 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['todosOsUsuarios'])
+    ...mapGetters(['usuarioLogado', 'todosOsUsuarios'])
     
   },
   created () {
-    console.log(this.todosOsUsuarios);
+    if (this.usuarioLogado) {
+      this.$router.push('/');
+    }
+    console.log("aaaa",this.todosOsUsuarios);
   },
   methods: {
-    loginUser () {
+    async loginUser () {
       console.log('Tentando fazer login com:', this.user.email);
+      console.log('Usuários disponíveis:', this.todosOsUsuarios);
       const usuarioEncontrado = this.todosOsUsuarios.find(u => u.email === this.user.email && u.password === this.user.password);
       if (usuarioEncontrado) {
         this.loginError = false;
         alert('Login efetuado com sucesso!');
         console.log('Usuário encontrado, despachando ação de login');
-        this.$store.dispatch('logarUsuario', usuarioEncontrado);
+        await this.$store.dispatch('logarUsuario', usuarioEncontrado);
 
         this.$router.push('/'); 
       } else {

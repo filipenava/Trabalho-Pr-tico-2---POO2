@@ -1,5 +1,5 @@
 <template>
-  <ul class="nav nav-mobile-menu">
+  <ul class="nav nav-mobile-menu" v-if="estaLogado">
     <!-- <base-dropdown>
       <template slot="title">
         <i class="fa fa-globe"></i>
@@ -28,20 +28,25 @@
     </base-dropdown> -->
 
     <li class="nav-item">
-      <a class="nav-link"  @click="deslogar">
+      <a class="nav-link"  @click="deslogar" v-if="estaLogado">
         <span class="no-icon">Sair</span>
       </a>
     </li>
   </ul>
 </template>
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     name: 'mobile-menu',
+    computed: {
+      ...mapGetters(['usuarioPapel', 'estaLogado']),
+    },
     methods: {
       deslogar() {
         this.$store.dispatch('deslogarUsuario');
         alert('Usuário saiu do sistema!');
-        this.$router.push('/login'); // Redireciona o usuário para a página de login após deslogar
+        this.$router.push('/admin/login'); // Redireciona o usuário para a página de login após deslogar
       },
     }
   }

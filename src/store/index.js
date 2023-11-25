@@ -41,17 +41,8 @@ const store = new Vuex.Store({
     hasPhysicalMediaInCart: false,
     freightValue: 5,
     pedidos: [],
-    usuarioLogado: null,
   },
   mutations: {
-    DEFINIR_USUARIO_LOGADO(state, usuario) {
-      console.log('Mutation DEFINIR_USUARIO_LOGADO chamada com:', usuario);
-    state.usuarioLogado = usuario;
-  },
-  DESLOGAR_USUARIO(state) {
-      console.log('Deslogando usuário');
-    state.usuarioLogado = null;
-  },
     ADICIONAR_DESENVOLVEDOR(state, novoDesenvolvedor) {
       state.desenvolvedores.push(novoDesenvolvedor);
     },
@@ -84,18 +75,6 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    logarUsuario({ commit }, credenciais) {
-      console.log('Ação logarUsuario chamada com credenciais:', credenciais);
-    // Simulando uma autenticação bem-sucedida:
-    const usuarioMock = { id: '123', nome: 'Usuário Teste', email: 'teste@example.com' };
-    commit('DEFINIR_USUARIO_LOGADO', usuarioMock);
-
-    // Em caso de erro, você pode lidar com isso aqui (ex: mostrar uma mensagem de erro)
-  },
-  deslogarUsuario({ commit }) {
-      console.log('Deslogando usuário...');
-    commit('DESLOGAR_USUARIO');
-  },
     adicionarDesenvolvedor({ commit }, desenvolvedor) {
       commit('ADICIONAR_DESENVOLVEDOR', desenvolvedor);
     },
@@ -113,8 +92,6 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    estaLogado: state => state.usuarioLogado !== null,
-    usuarioLogado: state => state.usuarioLogado,
     desenvolvedores: (state) => {
       return state.desenvolvedores;
     },

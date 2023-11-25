@@ -54,7 +54,7 @@
             <div class="divider"></div>
             <a class="dropdown-item" href="#">Separated link</a>
           </base-dropdown> -->
-          <li class="nav-item">
+          <li class="nav-item" v-if="estaLogado">
             <a href="#" class="nav-link" @click="deslogar">
               Sair
             </a>
@@ -65,6 +65,8 @@
   </nav>
 </template>
 <script>
+  import { mapGetters } from 'vuex';
+
   export default {
     computed: {
       routeName () {
@@ -77,11 +79,14 @@
         activeNotifications: false
       }
     },
+    computed: {
+      ...mapGetters(['usuarioPapel', 'estaLogado']),
+    },
     methods: {
       deslogar() {
         this.$store.dispatch('deslogarUsuario');
         alert('Usuário saiu do sistema!');
-        this.$router.push('/login'); // Redireciona o usuário para a página de login após deslogar
+        this.$router.push('/admin/login'); // Redireciona o usuário para a página de login após deslogar
       },
       capitalizeFirstLetter (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)

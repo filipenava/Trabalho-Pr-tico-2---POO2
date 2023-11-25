@@ -115,11 +115,12 @@ export default {
         cep: this.newUser.cep,
         email: this.newUser.email,
         password: this.newUser.password,
+        papel: 'cliente'
       };
       console.log(usuarioData);
       this.adicionarUsuario(usuarioData);
       alert('Usuário cadastrado com sucesso! Redirecionando para o login...');
-      this.$router.push('/admin/login');
+      this.$router.push('/');
     },
     testarComunicacaoVuex() {
       console.log("Usuários atuais no Vuex:", this.todosOsUsuarios);

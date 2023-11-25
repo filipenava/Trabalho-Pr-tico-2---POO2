@@ -44,7 +44,7 @@ const routes = [
         path: 'overview',
         name: 'Overview',
         component: Overview,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: 'checkout',
@@ -62,13 +62,13 @@ const routes = [
         path: 'game-admin',
         name: 'GameAdmin',
         component: GameViewAdmin,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresAdmin: true  }
       },
       {
         path: 'reports',
         name: 'Reports',
         component: Reports,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: 'order-list',
@@ -80,7 +80,7 @@ const routes = [
         path: 'order-list-admin',
         name: 'Order List Admin',
         component: OrderListAdmin,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: 'user',
@@ -102,7 +102,7 @@ const routes = [
         path: 'table-list',
         name: 'Table List',
         component: TableList,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
 
     ]
@@ -126,25 +126,29 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-  console.log('Navegação detectada de', from.path, 'para', to.path);
-// Lógica de autenticação
-if (to.matched.some(record => record.meta.requiresAuth)) {
-  console.log('Esta rota requer autenticação:', to.path);
-  if (!store.getters['estaLogado']) {
-      console.log('Usuário não está logado. Redirecionando para login...');
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath }
-    });
+  console.log('esse', store.getters['estaLogado']);
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters['estaLogado']) {
+      next({
+        path: '/admin/login',
+        query: { redirect: to.fullPath }
+      });
+    } else {
+      if (to.matched.some(record => record.meta.requiresAdmin)) {
+        if (store.getters['usuarioPapel'] === 'gerente') {
+          next();
+        } else {
+          next({ path: '/' }); 
+        }
+      } else {
+        next();
+      }
+    }
   } else {
-      console.log('Usuário logado. Acesso permitido.');
     next();
   }
-} else {
-  console.log('Esta rota não requer autenticação. Acesso permitido.');
-  next();
-}
 });
+
 
 /**
  * Asynchronously load view (Webpack Lazy loading compatible)
