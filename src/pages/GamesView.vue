@@ -12,7 +12,7 @@
     <div class="container-fluid">
       <div class="row">
         <!-- Loop através dos jogos -->
-        <div class="col-md-4" v-for="game in todosOsJogos" :key="game.id">
+        <div class="col-md-4" v-for="game in mediaAvaliacoes" :key="game.id">
           <card class="game-card">
             <template v-slot:header>
               <h5 class="title" @click="showGameDetails(game)">{{ game.nome }}</h5>
@@ -23,7 +23,15 @@
                 <span class="rating-stars">
                   <template v-for="star in 5">
                     <span class="star-icon" @click="rateGame(game, star)">
-                      {{ star <= game.rating ? '★' : '☆' }}
+                      <template v-if="star <= Math.floor(game.mediaAvaliacoes)">
+                        ★ <!-- Estrela cheia -->
+                      </template>
+                      <template v-else-if="star === Math.ceil(game.mediaAvaliacoes) && !Number.isInteger(game.mediaAvaliacoes)">
+                        ½ <!-- Meia estrela, se a média for decimal -->
+                      </template>
+                      <template v-else>
+                        ☆ <!-- Estrela vazia -->
+                      </template>
                     </span>
                   </template>
                 </span>
@@ -72,8 +80,9 @@ export default {
     PurchaseModal,
   },
   computed: {
-    ...mapGetters('jogos', ['todosOsJogos', 'generos']),
+    ...mapGetters('jogos', ['todosOsJogos', 'generos', 'mediaAvaliacoes']),
     ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue', ]),
+    
 
     selectedGames() {
       return this.carrinho;
@@ -93,15 +102,26 @@ export default {
     };
   },
   methods: {
-
+    ...mapActions('jogos',['adicionarAvaliacao']),
     showGameDetails(game) {
       this.selectedGame = game;
       this.$refs.gameModal.show('details');
     },
     rateGame(game, rating) {
-      // Atualiza a propriedade "rating" do jogo com a avaliação clicada pelo usuário
-      game.rating = rating;
-    },
+    // Atualiza a propriedade "rating" do jogo com a avaliação clicada pelo usuário
+    game.rating = rating;
+
+    // Cria uma nova avaliação
+    const novaAvaliacao = {
+      jogoId: game.id,
+      usuarioId: 'ok', // Supondo que você tenha um ID de usuário disponível
+      data: new Date().toISOString().slice(0, 10), // Data atual no formato YYYY-MM-DD
+      nota: rating
+    };
+
+    // Despacha a action para adicionar a avaliação
+    this.adicionarAvaliacao(novaAvaliacao);
+  },
     handleUpdateGame(updatedGame) {
       // Implemente o código para lidar com a atualização do jogo aqui
     },
@@ -121,10 +141,6 @@ export default {
         alert('Seu carrinho está vazio!');
         return;
       }
-
-      // Você pode adicionar qualquer lógica adicional aqui se necessário
-
-      // Redirecionar para a página de checkout
       this.$router.push('/admin/checkout');
     },
     handleAddToCart(payload) {

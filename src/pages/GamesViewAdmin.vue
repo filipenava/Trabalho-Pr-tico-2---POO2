@@ -22,7 +22,7 @@
     <div class="container-fluid">
       <div class="row">
         <!-- Loop através dos jogos -->
-        <div class="col-md-4" v-for="game in todosOsJogos" :key="game.id">
+        <div class="col-md-4" v-for="game in mediaAvaliacoes" :key="game.id">
           <card class="game-card">
             <template v-slot:header>
               <h5 class="title" @click="showGameDetails(game)">{{ game.nome }}</h5>
@@ -33,7 +33,15 @@
                 <span class="rating-stars">
                   <template v-for="star in 5">
                     <span class="star-icon" :class="{ 'filled': star <= game.rating }">
-                      {{ star <= game.rating ? '★' : '☆' }}
+                      <template v-if="star <= Math.floor(game.mediaAvaliacoes)">
+                        ★ <!-- Estrela cheia -->
+                      </template>
+                      <template v-else-if="star === Math.ceil(game.mediaAvaliacoes) && !Number.isInteger(game.mediaAvaliacoes)">
+                        ½ <!-- Meia estrela, se a média for decimal -->
+                      </template>
+                      <template v-else>
+                        ☆ <!-- Estrela vazia -->
+                      </template>
                     </span>
                   </template>
                 </span>
@@ -63,7 +71,7 @@ export default {
     DeveloperModal
   },
   computed: {
-    ...mapGetters('jogos',['todosOsJogos']) 
+    ...mapGetters('jogos',['todosOsJogos' , 'mediaAvaliacoes']) 
   },
   data() {
     return {
