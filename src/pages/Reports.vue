@@ -1,5 +1,48 @@
+<!-- src/pages/Reports.vue -->
 <template>
     <div class="reports-container">
+      <div v-if="mostrarModal" class="modal">
+        <div class="modal-content">
+          <span @click="fecharModal" class="close">&times;</span>
+          <h3>{{ tituloModal }}</h3>
+  
+          <!-- Conteúdo para Jogos por Categoria -->
+          <div v-if="tituloModal === 'Jogos por Categoria'">
+            <div v-for="(grupo, index) in jogosModal" :key="index">
+              <h4>{{ grupo.categoria }}</h4>
+              <ul>
+                <li v-for="(jogo, jIndex) in grupo.jogos" :key="jIndex">
+                  <strong>{{ jogo.nome }}</strong> (Valor: {{ jogo.valor }})
+                </li>
+              </ul>
+            </div>
+          </div>
+  
+          <!-- Conteúdo para Todas as Desenvolvedoras -->
+          <ul v-if="tituloModal === 'Todas as Desenvolvedoras'">
+            <li v-for="(desenvolvedora, index) in jogosModal" :key="index">
+              <strong>{{ desenvolvedora.nome }}</strong>
+            </li>
+          </ul>
+
+          <!-- Conteúdo para Todos os Clientes cadastrados -->
+          <ul v-if="tituloModal === 'Todos os Clientes cadastrados'">
+            <li v-for="(cliente, index) in jogosModal" :key="index">
+              <strong>{{ cliente.nome }}</strong> (CPF: {{ cliente.cpf }}, Email: {{ cliente.email }})
+            </li>
+          </ul>
+  
+          <!-- Conteúdo padrão para outros relatórios -->
+          <ul v-else>
+            <li v-for="(jogo, index) in jogosModal" :key="index">
+              <strong>{{ jogo.nome }}</strong> (Gênero: {{ jogo.genero }}, Valor: {{ jogo.valor }})
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      
+
       <h2>Todos Relatórios</h2>
           <div v-if="hasReports">
             <h3>Jogos</h3>
@@ -39,30 +82,67 @@
   </template>
   
 <script>
+
+import { mapGetters } from 'vuex';
+
 export default {
+
     data() {
         return {
-            // Dados e propriedades necessárias
+          jogosModal: [],
+          mostrarModal: false,
+          tituloModal: '',
+          hasReports: true,
         };
     },
     computed: {
-      hasReports() {
-        // Lógica para verificar se há relatórios disponíveis
-        return true; // Altere conforme a lógica de sua aplicação
-      },
+      ...mapGetters('jogos', ['todosOsJogos']),
+      ...mapGetters(['todosOsUsuarios']),
+      ...mapGetters(['desenvolvedores']),
     },
     methods: {
         gerarRelatorioTodosJogos() {
-        // Lógica para gerar relatório de todos os jogos
+          this.tituloModal = 'Lista de Todos os Jogos Cadastrados';
+          this.mostrarModal = true;
+          console.log('Jogos do Getter:', this.todosOsJogos);
+          this.jogosModal = [...this.todosOsJogos];
         },
         gerarRelatorioJogosPorCategoria() {
-        // Lógica para gerar relatório de jogos por categoria
+          this.tituloModal = 'Jogos por Categoria';
+          this.mostrarModal = true;
+
+          // Agrupando jogos por categoria
+          const jogosAgrupados = this.todosOsJogos.reduce((acc, jogo) => {
+            if (!acc[jogo.genero]) {
+              acc[jogo.genero] = [];
+            }
+            acc[jogo.genero].push(jogo);
+            return acc;
+          }, {});
+
+          // Transformando o objeto agrupado em um array para exibição
+          this.jogosModal = Object.entries(jogosAgrupados).map(([categoria, jogos]) => ({
+            categoria,
+            jogos
+          }));
         },
         gerarRelatorioDezJogosMaisCaros() {
-        // Lógica para gerar relatório dos dez jogos mais caros
+          this.tituloModal = 'Dez Jogos mais Caros';
+          this.mostrarModal = true;
+
+          // Ordenando os jogos pelo valor (decrescente) e pegando os primeiros dez
+          this.jogosModal = [...this.todosOsJogos]
+            .sort((a, b) => b.valor - a.valor)
+            .slice(0, 10);
         },
         gerarRelatorioDezJogosMaisBaratos() {
-        // Lógica para gerar relatório dos dez jogos mais baratos
+          this.tituloModal = 'Dez Jogos mais Baratos';
+          this.mostrarModal = true;
+
+          // Ordenando os jogos pelo valor (crescente) e pegando os primeiros dez
+          this.jogosModal = [...this.todosOsJogos]
+            .sort((a, b) => a.valor - b.valor)
+            .slice(0, 10);
         },
         gerarRelatorioJogosOrdenadosNotaA() {
         // Lógica para gerar relatório de jogos ordenados por nota (Estratégia A)
@@ -71,7 +151,11 @@ export default {
         // Lógica para gerar relatório de jogos ordenados por nota (Estratégia B)
         },
         gerarRelatorioTodasDesenvolvedoras() {
-        // Implementar a lógica para gerar relatório de todas as desenvolvedoras
+          this.tituloModal = 'Todas as Desenvolvedoras';
+          this.mostrarModal = true;
+
+          // Buscando os dados das desenvolvedoras do state do Vuex
+          this.jogosModal = [...this.desenvolvedores];
         },
         gerarRelatorioMaisJogosVendidos() {
         // Implementar a lógica para gerar relatório das desenvolvedoras com mais jogos vendidos
@@ -80,7 +164,11 @@ export default {
         // Implementar a lógica para gerar relatório das desenvolvedoras com maior valor de jogos vendidos
         },
         abrirRelatorioClientes() {
-        // Lógica para abrir o relatório de todos os clientes
+          this.tituloModal = 'Todos os Clientes cadastrados';
+          this.mostrarModal = true;
+
+          // Filtrando usuários com papel de cliente
+          this.jogosModal = [...this.todosOsUsuarios.filter(user => user.papel === 'cliente')];
         },
         abrirRelatorioClientesEpicos() {
         // Lógica para abrir o relatório de clientes épicos
@@ -109,6 +197,10 @@ export default {
         loadGerentes() {
         // Implemente a lógica para carregar ou exibir o relatório de Gerentes
         },
+        fecharModal() {
+            this.mostrarModal = false;
+            this.tituloModal = '';
+        }
     }
   };
   </script>
@@ -162,6 +254,52 @@ export default {
     button {
       font-size: 14px;
     }
+  }
+
+  .modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 10px;
+    background-color: #e9e9e9;
+    padding: 10px;
+    border-radius: 5px;
   }
   </style>
   

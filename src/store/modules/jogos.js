@@ -73,6 +73,7 @@ const actions = {
 
 const getters = {
   todosOsJogos: (state) => {
+    console.log("todosoosjogos",state.jogos);
     return state.jogos.map(jogo => {
       let genero = state.generos.find(g => g.id === jogo.generoId);
       let desenvolvedor = state.desenvolvedores.find(d => d.id === jogo.desenvolvedorId);
