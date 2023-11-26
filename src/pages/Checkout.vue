@@ -61,7 +61,9 @@
     },
     computed: {
       ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue']),
-
+      idUsuarioLogado() {
+        return this.$store.getters.usuarioLogado.id;
+      },
       selectedGames() {
         return this.carrinho;
       },
@@ -71,6 +73,7 @@
     },
     methods: {
       confirmPurchase() {
+        console.log(this.carrinho)
         if (!this.selectedPaymentMethod) {
           alert('Por favor, selecione um método de pagamento.');
           return;
@@ -84,9 +87,10 @@
           itens: this.selectedGames,
           total: this.cartTotal,
           metodoPagamento: this.selectedPaymentMethod,
-          temFrete: this.hasShipping,
+          frete: this.hasPhysicalMediaInCart,
+          idCliente: this.idUsuarioLogado,
         };
-
+        console.log('novopedido',novoPedido);
         // Despachar a ação para salvar o pedido no Vuex
         this.$store.dispatch('salvarPedido', novoPedido);
 

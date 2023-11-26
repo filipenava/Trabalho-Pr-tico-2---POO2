@@ -31,6 +31,17 @@
               <strong>{{ cliente.nome }}</strong> (CPF: {{ cliente.cpf }}, Email: {{ cliente.email }})
             </li>
           </ul>
+
+          <!-- Conteúdo padrão para outros relatórios -->
+          <ul v-else>
+            <li v-for="(jogo, index) in jogosModal" :key="index">
+              <strong>{{ jogo.nome }}</strong> 
+              (Gênero: {{ jogo.genero }}, 
+              Valor: {{ jogo.valor }},
+              Média de Avaliações: {{ jogo.mediaAvaliacoes.toFixed(2) }})
+            </li>
+          </ul>
+
   
           <!-- Conteúdo padrão para outros relatórios -->
           <ul v-else>
@@ -83,7 +94,7 @@
   
 <script>
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
 
@@ -101,10 +112,10 @@ export default {
       ...mapGetters(['desenvolvedores']),
     },
     methods: {
+      ...mapActions('jogos', ['ordenarJogosPorNota']),
         gerarRelatorioTodosJogos() {
           this.tituloModal = 'Lista de Todos os Jogos Cadastrados';
           this.mostrarModal = true;
-          console.log('Jogos do Getter:', this.todosOsJogos);
           this.jogosModal = [...this.todosOsJogos];
         },
         gerarRelatorioJogosPorCategoria() {
@@ -144,11 +155,19 @@ export default {
             .sort((a, b) => a.valor - b.valor)
             .slice(0, 10);
         },
-        gerarRelatorioJogosOrdenadosNotaA() {
-        // Lógica para gerar relatório de jogos ordenados por nota (Estratégia A)
+        async gerarRelatorioJogosOrdenadosNotaA() {
+          await this.ordenarJogosPorNota();
+          this.tituloModal = 'Jogos ordenados por Nota';
+          this.mostrarModal = true;
+          this.jogosModal = this.$store.state.jogos.jogosOrdenadosStrategyUm;
+          console.log("jogosmodal",this.jogosModal);
         },
-        gerarRelatorioJogosOrdenadosNotaB() {
-        // Lógica para gerar relatório de jogos ordenados por nota (Estratégia B)
+        async gerarRelatorioJogosOrdenadosNotaB() {
+          await this.$store.dispatch('jogos/ordenarJogosPorNotaDesc');
+          this.tituloModal = 'Jogos ordenados por Nota (Estratégia B)';
+          this.mostrarModal = true;
+          this.jogosModal = this.$store.state.jogos.jogosOrdenadosStrategyUm;
+          console.log("jogosmodal", this.jogosModal);
         },
         gerarRelatorioTodasDesenvolvedoras() {
           this.tituloModal = 'Todas as Desenvolvedoras';
@@ -201,7 +220,8 @@ export default {
             this.mostrarModal = false;
             this.tituloModal = '';
         }
-    }
+    },
+ 
   };
   </script>
   

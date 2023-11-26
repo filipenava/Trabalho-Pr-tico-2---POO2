@@ -85,5 +85,9 @@ export default {
     usuarioLogado: state => {
       return state.usuarios.find(user => user.id === state.usuarioLogadoId);
     },
+    nomeUsuarioPorId: (state) => (id) => {
+      const usuario = state.usuarios.find(user => user.id === id);
+      return usuario ? usuario.nome : 'Usuário desconhecido';
+    },
   },
 };

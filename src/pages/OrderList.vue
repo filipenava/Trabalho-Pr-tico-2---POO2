@@ -14,7 +14,7 @@
               </div>
             </div>
             <div class="card-body">
-              <p :class="{'status-pending': order.status === 'Aguardando', 'status-cancelled': order.status === 'Cancelada', 'status-completed': order.status === 'Concluída'}">
+              <p :class="{'status-pending': order.status === 'Aguardando', 'status-cancelled': order.status === 'Cancelado', 'status-completed': order.status === 'Aprovado'}">
                 Status: {{ order.status }}
               </p>
               <ul>
@@ -47,10 +47,15 @@
       };
     },
     computed: {
-        ...mapGetters(['getPedidos']),
-      orders() {
-        return this.$store.getters.getPedidos;
-      },
+        ...mapGetters(['getPedidos', 'usuarioLogado']),
+        orders() {
+          // Obtenha todos os pedidos
+          const todosPedidos = this.$store.getters.getPedidos;
+          
+          // Filtre os pedidos para incluir apenas aqueles feitos pelo usuário logado
+          const idUsuarioLogado = this.$store.getters.usuarioLogado.id;
+          return todosPedidos.filter(pedido => pedido.idCliente === idUsuarioLogado);
+        },
     },
     created() {
       

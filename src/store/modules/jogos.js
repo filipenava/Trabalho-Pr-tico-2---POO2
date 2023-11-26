@@ -1,6 +1,6 @@
 // src/store/modules/jogos.js
 // import Usuario from '@/classes/jogos';
-
+import { SortByRatingStrategy, SortByRatingStrategyDescending  } from './SortingStrategies';
 
 // Array de Jogos com referências aos IDs de Gênero e Desenvolvedor
 const jogos = [
@@ -52,6 +52,7 @@ const state = {
   generos: generos,
   desenvolvedores: [],
   avaliacoes: avaliacoes,
+  jogosOrdenadosStrategyUm: []
 };
 
 const mutations = {
@@ -74,6 +75,9 @@ const mutations = {
   ADICIONAR_AVALIACAO(state, novaAvaliacao) {
     state.avaliacoes.push(novaAvaliacao);
   },
+  SET_JOGOS_ORDENADOS(state,  jogosOrdenadosStrategyUm) {
+    state. jogosOrdenadosStrategyUm =  jogosOrdenadosStrategyUm;
+  }
 };
 
 const actions = {
@@ -94,14 +98,29 @@ const actions = {
     commit('ADICIONAR_GENERO', genero);
   },
   adicionarAvaliacao({ commit }, avaliacao) {
-    console.log("avaliacao", avaliacao);
     commit('ADICIONAR_AVALIACAO', avaliacao);
   },
+  ordenarJogosPorNota({ commit, getters }, strategy = new SortByRatingStrategy()) {
+    return new Promise((resolve) => {
+        const jogosOrdenadosStrategyUm = strategy.sort(getters.mediaAvaliacoes);
+        console.log("jogosOrdenadosStrategyUm", jogosOrdenadosStrategyUm);
+        commit('SET_JOGOS_ORDENADOS', jogosOrdenadosStrategyUm);
+        resolve(jogosOrdenadosStrategyUm);
+    });
+  },
+  ordenarJogosPorNotaDesc({ commit, getters }) {
+    const strategy = new SortByRatingStrategyDescending();
+    return new Promise((resolve) => {
+        const jogosOrdenadosStrategyDois = strategy.sort(getters.mediaAvaliacoes);
+        console.log("jogosOrdenadosStrategyDois", jogosOrdenadosStrategyDois);
+        commit('SET_JOGOS_ORDENADOS', jogosOrdenadosStrategyDois);
+        resolve(jogosOrdenadosStrategyDois);
+    });
+  }  
 };
 
 const getters = {
   todosOsJogos: (state) => {
-    console.log("todosoosjogos",state.jogos);
     return state.jogos.map(jogo => {
       let genero = state.generos.find(g => g.id === jogo.generoId);
       let desenvolvedor = state.desenvolvedores.find(d => d.id === jogo.desenvolvedorId);
@@ -128,6 +147,7 @@ const getters = {
       const avaliacoesJogo = state.avaliacoes.filter(avaliacao => avaliacao.jogoId === jogo.id);
       const media = avaliacoesJogo.reduce((acc, aval) => acc + aval.nota, 0) / avaliacoesJogo.length;
       
+      console.log(jogo.nome, media);
       return {
         ...jogo,
         mediaAvaliacoes: media || 0, // Caso não haja avaliações, retorna 0

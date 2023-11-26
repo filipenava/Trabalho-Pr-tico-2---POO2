@@ -14,7 +14,8 @@
                 </div>
               </div>              
               <div class="card-body">
-                <p :class="{'status-pending': order.status === 'Aguardando', 'status-cancelled': order.status === 'Cancelada', 'status-completed': order.status === 'Concluída'}">
+                <p>Cliente: {{ nomeCliente(order.idCliente) }}</p>
+                <p :class="{'status-pending': order.status === 'Aguardando', 'status-cancelled': order.status === 'Cancelado', 'status-completed': order.status === 'Aprovado'}">
                   Status: {{ order.status }}
                 </p>
                 <ul>
@@ -48,9 +49,12 @@
     computed: {
         ...mapGetters(['getPedidos']),
         orders() {
-        let pedidos = this.$store.getters.getPedidos;
-        return pedidos;
+          let pedidos = this.$store.getters.getPedidos;
+          return pedidos;
         },
+        nomeCliente() {
+          return idCliente => this.$store.getters.nomeUsuarioPorId(idCliente);
+        }
     },
     methods: {
         ...mapActions(['atualizarStatusPedido']),
@@ -58,10 +62,10 @@
             return itens.reduce((total, item) => total + item.valor, 0);
         },
         aprovarPedido(id) {
-        this.atualizarStatusPedido({ id, status: 'Concluída' });
+        this.atualizarStatusPedido({ id, status: 'Aprovado' });
         },
         rejeitarPedido(id) {
-        this.atualizarStatusPedido({ id, status: 'Cancelada' });
+        this.atualizarStatusPedido({ id, status: 'Cancelado' });
         }
     }
     };

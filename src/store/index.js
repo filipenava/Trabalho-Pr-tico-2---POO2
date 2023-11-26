@@ -25,7 +25,123 @@ Vue.use(Vuex);
   ];
 
   
-
+  const pedidosMockup = [
+    {
+      id: 'pedido-1',
+      data: '2023-11-26',
+      status: 'Aguardando',
+      itens: [
+        { id: 1, nome: "Shadow Quest", valor: 12, mediaType: 'fisica' },
+        { id: 3, nome: "Island Adventure", valor: 10, mediaType: 'digital' },
+      ],
+      total: 22,
+      idCliente: '1',
+      metodoPagamento: 'Cartão de Crédito',
+      frete: true,
+    },
+    {
+      id: 'pedido-2',
+      data: '2023-11-25',
+      status: 'Aprovado',
+      itens: [
+        { id: 4, nome: "Soccer Champions", valor: 8, mediaType: 'digital' }
+      ],
+      total: 8,
+      idCliente: '1',
+      metodoPagamento: 'PIX',
+      frete: false,
+    },
+    {
+      id: 'pedido-3',
+      data: '2023-11-02',
+      status: 'Aprovado',
+      itens: [
+        { id: 2, nome: "Speed Mania", valor: 15, mediaType: 'fisica' },
+      ],
+      total: 20,
+      idCliente: '1',
+      metodoPagamento: 'Cartão de Crédito',
+      frete: true,
+    },
+    {
+      id: 'pedido-4',
+      data: '2023-11-10',
+      status: 'Cancelado',
+      itens: [
+        { id: 10, nome: "Dragon's Journey", valor: 11, mediaType: 'fisica' },
+        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'digital' },
+      ],
+      total: 16,
+      idCliente: '5' ,
+      metodoPagamento: 'PIX',
+      frete: true,
+    },
+    {
+      id: 'pedido-5',
+      data: '2023-10-14',
+      status: 'Aprovado',
+      itens: [
+        { id: 12, nome: "Sonic", valor: 8, mediaType: 'fisica' },
+        { id: 1, nome: "Shadow Quest", valor: 12, mediaType: 'digital' },
+      ],
+      total: 20,
+      idCliente: '7',
+      metodoPagamento: 'PIX',
+      frete: true,
+    },
+    {
+      id: 'pedido-6',
+      data: '2023-11-18',
+      status: 'Aprovado',
+      itens: [
+        { id: 10, nome: "Dragon's Journey", valor: 11, mediaType: 'fisica' },
+        { id: 11, nome: "Mairo World", valor: 16, mediaType: 'digital' },
+        { id: 6, nome: "Mystery of the Ancients", valor: 14, mediaType: 'fisica' },
+        { id: 4, nome: "Soccer Champions", valor: 8, mediaType: 'digital' },
+        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'fisica' },
+      ],
+      total: 54,
+      idCliente: '7',
+      metodoPagamento: 'Cartão de Crédito',
+      frete: true,
+    },
+    {
+      id: 'pedido-7',
+      data: '2023-09-08',
+      status: 'Aprovado',
+      itens: [
+        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'digital' },
+      ],
+      total: 5,
+      idCliente: '3',
+      metodoPagamento: 'Cartão de Crédito',
+      frete: false,
+    },
+    {
+      id: 'pedido-8',
+      data: '2023-09-11',
+      status: 'Aprovado',
+      itens: [
+        { id: 2, nome: "Speed Mania", valor: 15, mediaType: 'digital' },
+      ],
+      total: 15,
+      idCliente: '8',
+      metodoPagamento: 'Cartão de Crédito',
+      frete: false,
+    },
+    {
+      id: 'pedido-9',
+      data: '2023-09-19',
+      status: 'Aprovado',
+      itens: [
+        { id: 3, nome: "Island Adventure", valor: 10, mediaType: 'digital' },
+      ],
+      total: 10,
+      idCliente: '6',
+      metodoPagamento: 'Cartão de Crédito',
+      frete: false,
+    },
+  ];
 
 // Cria a Vuex store
 const store = new Vuex.Store({
@@ -40,7 +156,7 @@ const store = new Vuex.Store({
     totalCarrinho: 0,
     hasPhysicalMediaInCart: false,
     freightValue: 5,
-    pedidos: [],
+    pedidos: pedidosMockup,
   },
   mutations: {
     ADICIONAR_DESENVOLVEDOR(state, novoDesenvolvedor) {
