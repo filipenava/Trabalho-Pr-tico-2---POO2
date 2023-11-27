@@ -144,7 +144,7 @@ router.beforeEach((to, from, next) => {
         if (store.getters['usuarioPapel'] === 'gerente') {
           next();
         } else {
-          next({ path: '/' }); 
+          next(); 
         }
       } else {
         next();

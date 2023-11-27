@@ -1,5 +1,5 @@
 // src/classes/Usuario.js
-export default function Usuario({ id, nome, cpf, rg, dataNascimento, endereco, cep, email, password, papel }) {
+export default function Usuario({ id, nome, cpf, rg, dataNascimento, endereco, cep, email, password, papel, nivel  }) {
     return {
       id,
       nome,
@@ -10,7 +10,8 @@ export default function Usuario({ id, nome, cpf, rg, dataNascimento, endereco, c
       cep,
       email,
       password,
-      papel
+      papel,
+      nivel 
     };
   }
   

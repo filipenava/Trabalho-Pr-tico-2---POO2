@@ -97,8 +97,23 @@ const actions = {
   adicionarGenero({ commit }, genero) {
     commit('ADICIONAR_GENERO', genero);
   },
-  adicionarAvaliacao({ commit }, avaliacao) {
+  adicionarAvaliacao({ commit, rootState }, avaliacao) {
+    console.log("avaliacao", avaliacao);
+    // Sua lógica existente
     commit('ADICIONAR_AVALIACAO', avaliacao);
+    console.log("usuario", avaliacao.usuarioId);
+
+     // Localiza o usuário no array de usuários
+    const usuario = rootState.usuarios.usuarios.find(u => u.id === avaliacao.usuarioId);
+
+    // Verifica se o usuário existe e se o nível é menor que 5
+    if (usuario && usuario.nivel < 5) {
+      usuario.nivel++;
+      console.log('Avaliação adicionada. Usuário agora é nível', usuario.nivel);
+      commit('ATUALIZAR_USUARIO', usuario, { root: true });
+    }
+
+    console.log("state", state);
   },
   ordenarJogosPorNota({ commit, getters }, strategy = new SortByRatingStrategy()) {
     return new Promise((resolve) => {

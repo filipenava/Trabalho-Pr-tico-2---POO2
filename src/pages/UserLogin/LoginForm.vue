@@ -54,7 +54,7 @@ export default {
     if (this.usuarioLogado) {
       this.$router.push('/');
     }
-    console.log("aaaa",this.todosOsUsuarios);
+   
   },
   methods: {
     async loginUser () {
@@ -64,7 +64,7 @@ export default {
       if (usuarioEncontrado) {
         this.loginError = false;
         alert('Login efetuado com sucesso!');
-        console.log('Usuário encontrado, despachando ação de login');
+        console.log('Usuário encontrado, despachando ação de login', usuarioEncontrado);
         await this.$store.dispatch('logarUsuario', usuarioEncontrado);
 
         this.$router.push('/'); 

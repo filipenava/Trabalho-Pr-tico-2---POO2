@@ -82,7 +82,7 @@ export default {
   computed: {
     ...mapGetters('jogos', ['todosOsJogos', 'generos', 'mediaAvaliacoes']),
     ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue', ]),
-    
+    ...mapGetters(['usuarioLogado']),
 
     selectedGames() {
       return this.carrinho;
@@ -103,25 +103,30 @@ export default {
   },
   methods: {
     ...mapActions('jogos',['adicionarAvaliacao']),
-    showGameDetails(game) {
+    showGameDetails(game) { 
       this.selectedGame = game;
       this.$refs.gameModal.show('details');
     },
     rateGame(game, rating) {
-    // Atualiza a propriedade "rating" do jogo com a avaliação clicada pelo usuário
-    game.rating = rating;
+      // Atualiza a propriedade "rating" do jogo com a avaliação clicada pelo usuário
+      game.rating = rating;
 
-    // Cria uma nova avaliação
-    const novaAvaliacao = {
-      jogoId: game.id,
-      usuarioId: 'ok', // Supondo que você tenha um ID de usuário disponível
-      data: new Date().toISOString().slice(0, 10), // Data atual no formato YYYY-MM-DD
-      nota: rating
-    };
+      if (!this.usuarioLogado) {
+          alert('Você precisa estar logado para avaliar um jogo.');
+          return;
+        }
 
-    // Despacha a action para adicionar a avaliação
-    this.adicionarAvaliacao(novaAvaliacao);
-  },
+      // Cria uma nova avaliação
+      const novaAvaliacao = {
+        jogoId: game.id,
+        usuarioId: this.usuarioLogado.id, // Supondo que você tenha um ID de usuário disponível
+        data: new Date().toISOString().slice(0, 10), // Data atual no formato YYYY-MM-DD
+        nota: rating
+      };
+
+      // Despacha a action para adicionar a avaliação
+      this.adicionarAvaliacao(novaAvaliacao);
+    },
     handleUpdateGame(updatedGame) {
       // Implemente o código para lidar com a atualização do jogo aqui
     },

@@ -15,7 +15,8 @@
     <p class="description text-center">
       Endereço: {{ usuarioLogado.endereco }} <br>
       CPF: {{ usuarioLogado.cpf }}  <br>
-      Papel: {{ usuarioLogado.papel }}
+      Papel: {{ usuarioLogado.papel }} <br>
+      Nivel: {{ usuarioLogado.nivel }}
     </p>
 
   </card>

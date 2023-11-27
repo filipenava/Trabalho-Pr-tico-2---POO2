@@ -70,6 +70,10 @@
     computed: {
       ...mapGetters(['usuarioPapel', 'estaLogado']),
     },
+    created() {
+      console.log("talogado",this.usuarioPapel);
+      console.log("talogado",this.estaLogado);
+    },
     methods: {
       toggleSidebar () {
         if (this.$sidebar.showSidebar) {

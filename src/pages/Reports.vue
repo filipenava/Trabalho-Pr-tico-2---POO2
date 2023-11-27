@@ -6,50 +6,70 @@
           <span @click="fecharModal" class="close">&times;</span>
           <h3>{{ tituloModal }}</h3>
   
-          <!-- Conteúdo para Jogos por Categoria -->
-          <div v-if="tituloModal === 'Jogos por Categoria'">
-            <div v-for="(grupo, index) in jogosModal" :key="index">
-              <h4>{{ grupo.categoria }}</h4>
-              <ul>
-                <li v-for="(jogo, jIndex) in grupo.jogos" :key="jIndex">
-                  <strong>{{ jogo.nome }}</strong> (Valor: {{ jogo.valor }})
-                </li>
-              </ul>
-            </div>
+          <!-- Conteúdo para Todas as Vendas realizadas -->
+          <div v-if="tituloModal === 'Todas as Vendas realizadas'">
+            <ul>
+              <li v-for="(venda, index) in jogosModal" :key="index">
+                <strong>ID da Venda:</strong> {{ venda.id }} <br>
+                <strong>Data:</strong> {{ venda.data }} <br>
+                <strong>Status:</strong> {{ venda.status }} <br>
+                <strong>Total:</strong> {{ venda.total }} <br>
+                <!-- Outros detalhes da venda -->
+              </li>
+            </ul>
+          </div>
+          
+          <div v-if="tituloModal === 'Histórico de Vendas de um Cliente específico'">
+            <select v-model="usuarioSelecionado">
+              <option v-for="usuario in todosOsUsuarios" :value="usuario.id" :key="usuario.id">
+                {{ usuario.nome }}
+              </option>
+            </select>
+            <ul v-if="usuarioSelecionado">
+              <li v-for="(venda, index) in jogosModal" :key="index">
+                <strong>ID da Venda:</strong> {{ venda.id }} <br>
+                <strong>Data:</strong> {{ venda.data }} <br>
+                <strong>Status:</strong> {{ venda.status }} <br>
+                <strong>Total:</strong> {{ venda.total }} <br>
+              </li>
+            </ul>
           </div>
 
-          <!-- Conteúdo para Desenvolvedoras com Maior Valor de Jogos Vendidos -->
-          <ul v-if="tituloModal === 'Desenvolvedoras com Maior Valor de Jogos Vendidos'">
-            <li v-for="(desenvolvedora, index) in jogosModal" :key="index">
-              <strong>{{ desenvolvedora.nome }}</strong> (Valor Total de Jogos Vendidos: {{ desenvolvedora.valorVendas }})
-            </li>
-          </ul>
-  
-          <!-- Conteúdo para Desenvolvedoras com Mais Jogos Vendidos -->
-          <ul v-if="tituloModal === 'Desenvolvedoras com Mais Jogos Vendidos'">
-            <li v-for="(desenvolvedora, index) in jogosModal" :key="index">
-              <strong>{{ desenvolvedora.nome }}</strong> (Jogos Vendidos: {{ desenvolvedora.vendas }})
-            </li>
-          </ul>
+          <div v-if="tituloModal === 'Vendas realizadas em um mês específico'">
+            <input type="month" v-model="mesSelecionado">
+            <button @click="filtrarVendasPorMes">Filtrar</button>
+            <ul>
+              <li v-for="(venda, index) in jogosModal" :key="index">
+                <strong>ID da Venda:</strong> {{ venda.id }} <br>
+                <strong>Data:</strong> {{ venda.data }} <br>
+                <strong>Status:</strong> {{ venda.status }} <br>
+                <strong>Total:</strong> {{ venda.total }} <br>
+              </li>
+            </ul>
+          </div>
 
-          <!-- Conteúdo para Todos os Clientes cadastrados -->
-          <ul v-if="tituloModal === 'Todos os Clientes cadastrados'">
-            <li v-for="(cliente, index) in jogosModal" :key="index">
-              <strong>{{ cliente.nome }}</strong> (CPF: {{ cliente.cpf }}, Email: {{ cliente.email }})
-            </li>
-          </ul>
+          <div v-if="tituloModal === 'Vendas de uma Desenvolvedora específica'">
+            <select v-model="desenvolvedoraSelecionada">
+              <option v-for="desenvolvedora in desenvolvedores" :value="desenvolvedora.id" :key="desenvolvedora.id">
+                {{ desenvolvedora.nome }}
+              </option>
+            </select>
+            <ul v-if="desenvolvedoraSelecionada">
+              <li v-for="(venda, index) in jogosModal" :key="index">
+                <strong>ID da Venda:</strong> {{ venda.id }} <br>
+                <strong>Data:</strong> {{ venda.data }} <br>
+                <strong>Status:</strong> {{ venda.status }} <br>
+                <strong>Total:</strong> {{ venda.total }} <br>
+                <!-- Outros detalhes da venda -->
+              </li>
+            </ul>
+          </div>
+          
+          
 
-          <!-- Conteúdo para Todas as Desenvolvedoras -->
-          <ul v-if="tituloModal === 'Todas as Desenvolvedoras'">
-            <li v-for="(jogo, index) in jogosModal" :key="index">
-              <strong>{{ jogo.nome }}</strong> 
-              <span v-if="jogo.genero">(Gênero: {{ jogo.genero }}</span>
-              <span v-if="jogo.valor">, Valor: {{ jogo.valor }}</span>
-              <span v-if="jogo.mediaAvaliacoes">, {{ ', Nota: ' + jogo.mediaAvaliacoes.toFixed(2) }})</span>
-            </li>
-          </ul>
         </div>
       </div>
+
       
       
 
@@ -57,11 +77,7 @@
           <div v-if="hasReports">
             <JogosReport></JogosReport>
             <DesenvolvedoraReport></DesenvolvedoraReport>
-        
-            <h3>Clientes</h3>
-                <button @click="abrirRelatorioClientes">Todos os Clientes cadastrados</button>
-                <button @click="abrirRelatorioClientesEpicos">Todos os Clientes Épicos cadastrados</button>
-                <button @click="abrirRelatorioTopClientes">Dez Clientes com maior nível na plataforma</button>
+            <ClientesReport></ClientesReport>
           
             <h3>Vendas</h3>
                 <button @click="abrirRelatorioHistoricoVendas">Histórico de Vendas de um Cliente específico</button>
@@ -83,11 +99,12 @@
 <script>
 import JogosReport from './Reports/JogosReport.vue';
 import DesenvolvedoraReport from './Reports/DesenvolvedoraReport.vue';
+import ClientesReport from './Reports/ClientesReport.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     components: {
-      JogosReport,  DesenvolvedoraReport
+      JogosReport,  DesenvolvedoraReport, ClientesReport
 
     },
     data() {
@@ -96,6 +113,9 @@ export default {
           mostrarModal: false,
           tituloModal: '',
           hasReports: true,
+          usuarioSelecionado: null,
+          mesSelecionado: null,
+          desenvolvedoraSelecionada: null,
         };
     },
     computed: {
@@ -111,31 +131,47 @@ export default {
     },
     methods: {
       ...mapActions('jogos', ['ordenarJogosPorNota']),
+        carregarHistoricoVendas() {
+            if(this.usuarioSelecionado) {
+                this.jogosModal = this.pedidos.filter(pedido => pedido.idCliente === this.usuarioSelecionado);
+            }
+        },
         
-        abrirRelatorioClientes() {
-          this.tituloModal = 'Todos os Clientes cadastrados';
-          this.mostrarModal = true;
-
-          // Filtrando usuários com papel de cliente
-          this.jogosModal = [...this.todosOsUsuarios.filter(user => user.papel === 'cliente')];
-        },
-        abrirRelatorioClientesEpicos() {
-        // Lógica para abrir o relatório de clientes épicos
-        },
-        abrirRelatorioTopClientes() {
-        // Lógica para abrir o relatório dos dez clientes com maior nível
-        },
         abrirRelatorioHistoricoVendas() {
-        // Lógica para abrir o histórico de vendas de um cliente específico
+          const idClienteEspecifico = '1'; // Este valor deve ser obtido através da interface do usuário
+          this.jogosModal = this.pedidos.filter(pedido => pedido.idCliente === idClienteEspecifico);
+          this.tituloModal = 'Histórico de Vendas de um Cliente específico';
+          this.mostrarModal = true;
         },
         abrirRelatorioTodasVendas() {
-        // Lógica para abrir o relatório de todas as vendas realizadas
+          this.jogosModal = this.pedidos; 
+          this.tituloModal = 'Todas as Vendas realizadas';
+          this.mostrarModal = true;
         },
         abrirRelatorioVendasMes() {
-        // Lógica para abrir o relatório de vendas em um mês específico
+          this.tituloModal = 'Vendas realizadas em um mês específico';
+          this.mostrarModal = true;
+        },
+        filtrarVendasPorMes() {
+            if(this.mesSelecionado) {
+                let [ano, mes] = this.mesSelecionado.split('-');
+                this.jogosModal = this.pedidos.filter(pedido => {
+                    let dataPedido = new Date(pedido.data);
+                    return dataPedido.getFullYear() === parseInt(ano) && dataPedido.getMonth() === parseInt(mes) - 1;
+                });
+            }
         },
         abrirRelatorioVendasDesenvolvedora() {
-        // Lógica para abrir o relatório de vendas de uma desenvolvedora específica
+          this.tituloModal = 'Vendas de uma Desenvolvedora específica';
+          this.mostrarModal = true;
+          this.desenvolvedoraSelecionada = null; // Reset a seleção
+        },
+        filtrarVendasPorDesenvolvedora() {
+          if (this.desenvolvedoraSelecionada) {
+            this.jogosModal = this.pedidos.filter(pedido =>
+              pedido.itens.some(item => item.desenvolvedorId === this.desenvolvedoraSelecionada)
+            );
+          }
         },
         abrirRelatorioVendasMetodoPagamento() {
         // Lógica para abrir o relatório de vendas por método de pagamento
@@ -151,6 +187,19 @@ export default {
             this.tituloModal = '';
         }
     },
+    watch: {
+      usuarioSelecionado(newVal, oldVal) {
+          if(newVal !== oldVal) {
+              this.carregarHistoricoVendas();
+          }
+      },
+      desenvolvedoraSelecionada(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.filtrarVendasPorDesenvolvedora();
+        }
+      },
+},
+
  
   };
   </script>
