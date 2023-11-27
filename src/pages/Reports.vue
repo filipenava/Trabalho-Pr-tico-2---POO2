@@ -65,6 +65,25 @@
             </ul>
           </div>
           
+          <div v-if="tituloModal === 'Vendas por método de pagamento'">
+            <select v-model="metodoPagamentoSelecionado">
+              <option value="Cartao">Cartão de Crédito</option>
+              <option value="PIX">PIX</option>
+              <option value="Boleto">Boleto</option>
+              <!-- Adicione mais opções conforme necessário -->
+            </select>
+            <ul v-if="metodoPagamentoSelecionado">
+              <li v-for="(venda, index) in jogosModal" :key="index">
+                <strong>ID da Venda:</strong> {{ venda.id }} <br>
+                <strong>Data:</strong> {{ venda.data }} <br>
+                <strong>Status:</strong> {{ venda.status }} <br>
+                <strong>Total:</strong> {{ venda.total }} <br>
+                <strong>Método de Pagamento:</strong> {{ venda.metodoPagamento }} <br>
+                <!-- Outros detalhes da venda -->
+              </li>
+            </ul>
+          </div>
+          
           
 
         </div>
@@ -116,6 +135,7 @@ export default {
           usuarioSelecionado: null,
           mesSelecionado: null,
           desenvolvedoraSelecionada: null,
+          metodoPagamentoSelecionado: null,
         };
     },
     computed: {
@@ -174,7 +194,16 @@ export default {
           }
         },
         abrirRelatorioVendasMetodoPagamento() {
-        // Lógica para abrir o relatório de vendas por método de pagamento
+          this.tituloModal = 'Vendas por método de pagamento';
+          this.mostrarModal = true;
+          this.metodoPagamentoSelecionado = null; // Resetar a seleção
+        },
+        filtrarVendasPorMetodoPagamento() {
+          if (this.metodoPagamentoSelecionado) {
+            this.jogosModal = this.pedidos.filter(pedido => 
+              pedido.metodoPagamento === this.metodoPagamentoSelecionado
+            );
+          }
         },
         loadTransportadoras() {
         // Implemente a lógica para carregar ou exibir o relatório de Transportadoras
@@ -196,6 +225,11 @@ export default {
       desenvolvedoraSelecionada(newVal, oldVal) {
         if (newVal !== oldVal) {
           this.filtrarVendasPorDesenvolvedora();
+        }
+      },
+      metodoPagamentoSelecionado(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.filtrarVendasPorMetodoPagamento();
         }
       },
 },

@@ -36,7 +36,7 @@ Vue.use(Vuex);
       ],
       total: 22,
       idCliente: '1',
-      metodoPagamento: 'Cartão de Crédito',
+      metodoPagamento: 'Cartao',
       frete: true,
     },
     {
@@ -60,7 +60,7 @@ Vue.use(Vuex);
       ],
       total: 20,
       idCliente: '1',
-      metodoPagamento: 'Cartão de Crédito',
+      metodoPagamento: 'Cartao',
       frete: true,
     },
     {
@@ -102,7 +102,7 @@ Vue.use(Vuex);
       ],
       total: 54,
       idCliente: '7',
-      metodoPagamento: 'Cartão de Crédito',
+      metodoPagamento: 'Cartao',
       frete: true,
     },
     {
@@ -114,7 +114,7 @@ Vue.use(Vuex);
       ],
       total: 5,
       idCliente: '3',
-      metodoPagamento: 'Cartão de Crédito',
+      metodoPagamento: 'Cartao',
       frete: false,
     },
     {
@@ -126,7 +126,7 @@ Vue.use(Vuex);
       ],
       total: 15,
       idCliente: '8',
-      metodoPagamento: 'Cartão de Crédito',
+      metodoPagamento: 'Cartao',
       frete: false,
     },
     {
@@ -138,7 +138,7 @@ Vue.use(Vuex);
       ],
       total: 10,
       idCliente: '6',
-      metodoPagamento: 'Cartão de Crédito',
+      metodoPagamento: 'Cartao',
       frete: false,
     },
   ];
