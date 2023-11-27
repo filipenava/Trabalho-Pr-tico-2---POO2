@@ -17,11 +17,18 @@
               </ul>
             </div>
           </div>
-  
-          <!-- Conteúdo para Todas as Desenvolvedoras -->
-          <ul v-if="tituloModal === 'Todas as Desenvolvedoras'">
+
+          <!-- Conteúdo para Desenvolvedoras com Maior Valor de Jogos Vendidos -->
+          <ul v-if="tituloModal === 'Desenvolvedoras com Maior Valor de Jogos Vendidos'">
             <li v-for="(desenvolvedora, index) in jogosModal" :key="index">
-              <strong>{{ desenvolvedora.nome }}</strong>
+              <strong>{{ desenvolvedora.nome }}</strong> (Valor Total de Jogos Vendidos: {{ desenvolvedora.valorVendas }})
+            </li>
+          </ul>
+  
+          <!-- Conteúdo para Desenvolvedoras com Mais Jogos Vendidos -->
+          <ul v-if="tituloModal === 'Desenvolvedoras com Mais Jogos Vendidos'">
+            <li v-for="(desenvolvedora, index) in jogosModal" :key="index">
+              <strong>{{ desenvolvedora.nome }}</strong> (Jogos Vendidos: {{ desenvolvedora.vendas }})
             </li>
           </ul>
 
@@ -32,21 +39,13 @@
             </li>
           </ul>
 
-          <!-- Conteúdo padrão para outros relatórios -->
-          <ul v-else>
+          <!-- Conteúdo para Todas as Desenvolvedoras -->
+          <ul v-if="tituloModal === 'Todas as Desenvolvedoras'">
             <li v-for="(jogo, index) in jogosModal" :key="index">
               <strong>{{ jogo.nome }}</strong> 
-              (Gênero: {{ jogo.genero }}, 
-              Valor: {{ jogo.valor }},
-              Média de Avaliações: {{ jogo.mediaAvaliacoes.toFixed(2) }})
-            </li>
-          </ul>
-
-  
-          <!-- Conteúdo padrão para outros relatórios -->
-          <ul v-else>
-            <li v-for="(jogo, index) in jogosModal" :key="index">
-              <strong>{{ jogo.nome }}</strong> (Gênero: {{ jogo.genero }}, Valor: {{ jogo.valor }})
+              <span v-if="jogo.genero">(Gênero: {{ jogo.genero }}</span>
+              <span v-if="jogo.valor">, Valor: {{ jogo.valor }}</span>
+              <span v-if="jogo.mediaAvaliacoes">, {{ ', Nota: ' + jogo.mediaAvaliacoes.toFixed(2) }})</span>
             </li>
           </ul>
         </div>
@@ -56,20 +55,9 @@
 
       <h2>Todos Relatórios</h2>
           <div v-if="hasReports">
-            <h3>Jogos</h3>
-                    <button @click="gerarRelatorioTodosJogos">Todos os Jogos cadastrados</button>
-                    <button @click="gerarRelatorioJogosPorCategoria">Jogos por categoria</button>
-                    <button @click="gerarRelatorioDezJogosMaisCaros">Dez Jogos mais caros</button>
-                    <button @click="gerarRelatorioDezJogosMaisBaratos">Dez Jogos mais baratos</button>
-                    <button @click="gerarRelatorioJogosOrdenadosNotaA">Jogos ordenados por nota (Estratégia A)</button>
-                    <button @click="gerarRelatorioJogosOrdenadosNotaB">Jogos ordenados por nota (Estratégia B)</button>
-
-            <h3>Desenvolvedoras</h3>
-                <button @click="gerarRelatorioTodasDesenvolvedoras">Todas as Desenvolvedoras</button>
-                <button @click="gerarRelatorioMaisJogosVendidos">Desenvolvedoras com Mais Jogos Vendidos</button>
-                <button @click="gerarRelatorioMaiorValorJogosVendidos">Desenvolvedoras com Maior Valor de Jogos Vendidos</button>
-  
-  
+            <JogosReport></JogosReport>
+            <DesenvolvedoraReport></DesenvolvedoraReport>
+        
             <h3>Clientes</h3>
                 <button @click="abrirRelatorioClientes">Todos os Clientes cadastrados</button>
                 <button @click="abrirRelatorioClientesEpicos">Todos os Clientes Épicos cadastrados</button>
@@ -93,11 +81,15 @@
   </template>
   
 <script>
-
+import JogosReport from './Reports/JogosReport.vue';
+import DesenvolvedoraReport from './Reports/DesenvolvedoraReport.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
+    components: {
+      JogosReport,  DesenvolvedoraReport
 
+    },
     data() {
         return {
           jogosModal: [],
@@ -110,78 +102,16 @@ export default {
       ...mapGetters('jogos', ['todosOsJogos']),
       ...mapGetters(['todosOsUsuarios']),
       ...mapGetters(['desenvolvedores']),
+      pedidos() {
+        return this.$store.getters.getPedidos;
+      },
+      jogos() {
+        return this.$store.getters.todosOsJogos;
+      },
     },
     methods: {
       ...mapActions('jogos', ['ordenarJogosPorNota']),
-        gerarRelatorioTodosJogos() {
-          this.tituloModal = 'Lista de Todos os Jogos Cadastrados';
-          this.mostrarModal = true;
-          this.jogosModal = [...this.todosOsJogos];
-        },
-        gerarRelatorioJogosPorCategoria() {
-          this.tituloModal = 'Jogos por Categoria';
-          this.mostrarModal = true;
-
-          // Agrupando jogos por categoria
-          const jogosAgrupados = this.todosOsJogos.reduce((acc, jogo) => {
-            if (!acc[jogo.genero]) {
-              acc[jogo.genero] = [];
-            }
-            acc[jogo.genero].push(jogo);
-            return acc;
-          }, {});
-
-          // Transformando o objeto agrupado em um array para exibição
-          this.jogosModal = Object.entries(jogosAgrupados).map(([categoria, jogos]) => ({
-            categoria,
-            jogos
-          }));
-        },
-        gerarRelatorioDezJogosMaisCaros() {
-          this.tituloModal = 'Dez Jogos mais Caros';
-          this.mostrarModal = true;
-
-          // Ordenando os jogos pelo valor (decrescente) e pegando os primeiros dez
-          this.jogosModal = [...this.todosOsJogos]
-            .sort((a, b) => b.valor - a.valor)
-            .slice(0, 10);
-        },
-        gerarRelatorioDezJogosMaisBaratos() {
-          this.tituloModal = 'Dez Jogos mais Baratos';
-          this.mostrarModal = true;
-
-          // Ordenando os jogos pelo valor (crescente) e pegando os primeiros dez
-          this.jogosModal = [...this.todosOsJogos]
-            .sort((a, b) => a.valor - b.valor)
-            .slice(0, 10);
-        },
-        async gerarRelatorioJogosOrdenadosNotaA() {
-          await this.ordenarJogosPorNota();
-          this.tituloModal = 'Jogos ordenados por Nota';
-          this.mostrarModal = true;
-          this.jogosModal = this.$store.state.jogos.jogosOrdenadosStrategyUm;
-          console.log("jogosmodal",this.jogosModal);
-        },
-        async gerarRelatorioJogosOrdenadosNotaB() {
-          await this.$store.dispatch('jogos/ordenarJogosPorNotaDesc');
-          this.tituloModal = 'Jogos ordenados por Nota (Estratégia B)';
-          this.mostrarModal = true;
-          this.jogosModal = this.$store.state.jogos.jogosOrdenadosStrategyUm;
-          console.log("jogosmodal", this.jogosModal);
-        },
-        gerarRelatorioTodasDesenvolvedoras() {
-          this.tituloModal = 'Todas as Desenvolvedoras';
-          this.mostrarModal = true;
-
-          // Buscando os dados das desenvolvedoras do state do Vuex
-          this.jogosModal = [...this.desenvolvedores];
-        },
-        gerarRelatorioMaisJogosVendidos() {
-        // Implementar a lógica para gerar relatório das desenvolvedoras com mais jogos vendidos
-        },
-        gerarRelatorioMaiorValorJogosVendidos() {
-        // Implementar a lógica para gerar relatório das desenvolvedoras com maior valor de jogos vendidos
-        },
+        
         abrirRelatorioClientes() {
           this.tituloModal = 'Todos os Clientes cadastrados';
           this.mostrarModal = true;

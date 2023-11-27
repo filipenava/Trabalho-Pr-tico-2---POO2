@@ -37,7 +37,7 @@ export default {
       this.selectedMediaType = '';
     },
     addToCart() {
-      this.$emit('add-to-cart', { game: this.selectedGame, mediaType: this.selectedMediaType });
+      this.$emit('add-to-cart', { game: this.selectedGame, mediaType: this.selectedMediaType,  desenvolvedorId: this.selectedGame.desenvolvedorId });
       this.hideModal();
     }
   }

@@ -27,12 +27,12 @@ Vue.use(Vuex);
   
   const pedidosMockup = [
     {
-      id: 'pedido-1',
+      id: '1',
       data: '2023-11-26',
       status: 'Aguardando',
       itens: [
-        { id: 1, nome: "Shadow Quest", valor: 12, mediaType: 'fisica' },
-        { id: 3, nome: "Island Adventure", valor: 10, mediaType: 'digital' },
+        { id: 1, nome: "Shadow Quest", valor: 12, mediaType: 'fisica', desenvolvedorId: 1 },
+        { id: 3, nome: "Island Adventure", valor: 10, mediaType: 'digital', desenvolvedorId: 2 },
       ],
       total: 22,
       idCliente: '1',
@@ -40,11 +40,11 @@ Vue.use(Vuex);
       frete: true,
     },
     {
-      id: 'pedido-2',
+      id: '2',
       data: '2023-11-25',
       status: 'Aprovado',
       itens: [
-        { id: 4, nome: "Soccer Champions", valor: 8, mediaType: 'digital' }
+        { id: 4, nome: "Soccer Champions", valor: 8, mediaType: 'digital', desenvolvedorId: 4 }
       ],
       total: 8,
       idCliente: '1',
@@ -52,11 +52,11 @@ Vue.use(Vuex);
       frete: false,
     },
     {
-      id: 'pedido-3',
+      id: '3',
       data: '2023-11-02',
       status: 'Aprovado',
       itens: [
-        { id: 2, nome: "Speed Mania", valor: 15, mediaType: 'fisica' },
+        { id: 2, nome: "Speed Mania", valor: 15, mediaType: 'fisica', desenvolvedorId: 2 },
       ],
       total: 20,
       idCliente: '1',
@@ -64,12 +64,12 @@ Vue.use(Vuex);
       frete: true,
     },
     {
-      id: 'pedido-4',
+      id: '4',
       data: '2023-11-10',
       status: 'Cancelado',
       itens: [
-        { id: 10, nome: "Dragon's Journey", valor: 11, mediaType: 'fisica' },
-        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'digital' },
+        { id: 10, nome: "Dragon's Journey", valor: 11, mediaType: 'fisica', desenvolvedorId: 10 },
+        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'digital', desenvolvedorId: 8 },
       ],
       total: 16,
       idCliente: '5' ,
@@ -77,12 +77,12 @@ Vue.use(Vuex);
       frete: true,
     },
     {
-      id: 'pedido-5',
+      id: '5',
       data: '2023-10-14',
       status: 'Aprovado',
       itens: [
-        { id: 12, nome: "Sonic", valor: 8, mediaType: 'fisica' },
-        { id: 1, nome: "Shadow Quest", valor: 12, mediaType: 'digital' },
+        { id: 12, nome: "Sonic", valor: 8, mediaType: 'fisica', desenvolvedorId: 10 },
+        { id: 1, nome: "Shadow Quest", valor: 12, mediaType: 'digital', desenvolvedorId: 1 },
       ],
       total: 20,
       idCliente: '7',
@@ -90,15 +90,15 @@ Vue.use(Vuex);
       frete: true,
     },
     {
-      id: 'pedido-6',
+      id: '6',
       data: '2023-11-18',
       status: 'Aprovado',
       itens: [
-        { id: 10, nome: "Dragon's Journey", valor: 11, mediaType: 'fisica' },
-        { id: 11, nome: "Mairo World", valor: 16, mediaType: 'digital' },
-        { id: 6, nome: "Mystery of the Ancients", valor: 14, mediaType: 'fisica' },
-        { id: 4, nome: "Soccer Champions", valor: 8, mediaType: 'digital' },
-        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'fisica' },
+        { id: 10, nome: "Dragon's Journey", valor: 11, mediaType: 'fisica', desenvolvedorId: 10 },
+        { id: 11, nome: "Mairo World", valor: 16, mediaType: 'digital', desenvolvedorId: 10 },
+        { id: 6, nome: "Mystery of the Ancients", valor: 14, mediaType: 'fisica', desenvolvedorId: 6 },
+        { id: 4, nome: "Soccer Champions", valor: 8, mediaType: 'digital', desenvolvedorId: 4 },
+        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'fisica', desenvolvedorId: 8 },
       ],
       total: 54,
       idCliente: '7',
@@ -106,11 +106,11 @@ Vue.use(Vuex);
       frete: true,
     },
     {
-      id: 'pedido-7',
+      id: '7',
       data: '2023-09-08',
       status: 'Aprovado',
       itens: [
-        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'digital' },
+        { id: 8, nome: "Fantasy Football", valor: 5, mediaType: 'digital', desenvolvedorId: 8 },
       ],
       total: 5,
       idCliente: '3',
@@ -118,11 +118,11 @@ Vue.use(Vuex);
       frete: false,
     },
     {
-      id: 'pedido-8',
+      id: '8',
       data: '2023-09-11',
       status: 'Aprovado',
       itens: [
-        { id: 2, nome: "Speed Mania", valor: 15, mediaType: 'digital' },
+        { id: 2, nome: "Speed Mania", valor: 15, mediaType: 'digital', desenvolvedorId: 2 },
       ],
       total: 15,
       idCliente: '8',
@@ -130,11 +130,11 @@ Vue.use(Vuex);
       frete: false,
     },
     {
-      id: 'pedido-9',
+      id: '9',
       data: '2023-09-19',
       status: 'Aprovado',
       itens: [
-        { id: 3, nome: "Island Adventure", valor: 10, mediaType: 'digital' },
+        { id: 3, nome: "Island Adventure", valor: 10, mediaType: 'digital', desenvolvedorId: 3 },
       ],
       total: 10,
       idCliente: '6',

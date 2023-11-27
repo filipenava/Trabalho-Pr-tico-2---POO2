@@ -73,7 +73,7 @@
     },
     methods: {
       confirmPurchase() {
-        console.log(this.carrinho)
+        console.log("carrinho",this.carrinho)
         if (!this.selectedPaymentMethod) {
           alert('Por favor, selecione um método de pagamento.');
           return;
@@ -89,6 +89,7 @@
           metodoPagamento: this.selectedPaymentMethod,
           frete: this.hasPhysicalMediaInCart,
           idCliente: this.idUsuarioLogado,
+
         };
         console.log('novopedido',novoPedido);
         // Despachar a ação para salvar o pedido no Vuex
