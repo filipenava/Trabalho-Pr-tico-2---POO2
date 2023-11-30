@@ -67,7 +67,7 @@ export default {
         console.log('Usuário encontrado, despachando ação de login', usuarioEncontrado);
         await this.$store.dispatch('logarUsuario', usuarioEncontrado);
 
-        this.$router.push('/'); 
+        this.$router.push('/admin/game'); 
       } else {
         this.loginError = true;
         alert('Erro: Email ou senha inválidos!');

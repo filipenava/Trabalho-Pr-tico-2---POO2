@@ -21,6 +21,10 @@
         <p class="total">
           Total: R$ {{ cartTotal.toFixed(2) }}
           <span v-if="hasPhysicalMediaInCart">(incluindo frete de R$ {{ freightValue }})</span>
+          <!-- Exibir desconto para cliente Épico -->
+          <span v-if="eClienteEpico">
+            (Desconto Épico aplicado de {{ descontoEpico }}% - Novo Total: R$ {{ totalCarrinhoComDesconto.toFixed(2) }})
+          </span>
         </p>
         <div class="payment-options">
           <h3>Forma de Pagamento:</h3>
@@ -60,7 +64,8 @@
       };
     },
     computed: {
-      ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue']),
+      ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue', 'totalCarrinhoComDesconto']),
+      ...mapGetters(['usuarioLogado', 'eClienteEpico', 'descontoEpico']),
       idUsuarioLogado() {
         return this.$store.getters.usuarioLogado.id;
       },
@@ -86,10 +91,10 @@
           status: 'Aguardando',
           itens: this.selectedGames,
           total: this.cartTotal,
+          totalComDesconto: this.totalCarrinhoComDesconto,
           metodoPagamento: this.selectedPaymentMethod,
           frete: this.hasPhysicalMediaInCart,
           idCliente: this.idUsuarioLogado,
-
         };
         console.log('novopedido',novoPedido);
         // Despachar a ação para salvar o pedido no Vuex

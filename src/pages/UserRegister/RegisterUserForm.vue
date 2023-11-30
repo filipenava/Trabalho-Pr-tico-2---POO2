@@ -99,8 +99,12 @@ export default {
   methods: {
     ...mapActions(['adicionarUsuario']),
     newId() {
-      let newid = Math.random().toString(36).substr(2, 9);
-      this.newUser.id = newid;
+      // Obtém os IDs atuais dos usuários e converte para números inteiros
+      const idsExistentes = this.todosOsUsuarios.map(usuario => parseInt(usuario.id));
+      // Encontra o maior ID no array
+      const maiorId = Math.max(...idsExistentes);
+      // Define o novo ID como o maior ID existente + 1
+      this.newUser.id = (maiorId + 1).toString();
     },
     registerUser() {
       this.newId();

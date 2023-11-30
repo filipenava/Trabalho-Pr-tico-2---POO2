@@ -26,19 +26,16 @@ Vue.use(Router);
 const routes = [
   {
     path: '/',
-    component: DashboardLayout,
-    redirect: '/admin/game',
-    meta: { requiresAuth: true }
+    redirect: '/admin/login' 
   },
   {
     path: '/login',
-    name: 'AdminLogin',
+    name: 'UserLogin',
     component: UserLogin
   },
   {
     path: '/admin',
     component: DashboardLayout,
-    redirect: '/admin/game',
     children: [
       {
         path: 'overview',
@@ -126,34 +123,54 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-  // Se o usuário está logado e tenta acessar a página de login,
-  // redireciona para a página de games.
-  if (store.getters['estaLogado'] && to.path === '/admin/login') {
-    next({ path: '/admin/game' });
-    return;
+
+  
+  // Tenta restaurar o estado de autenticação do localStorage
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  console.log('Usuário logado inicio chamou:', usuarioLogado);
+  // console.log('Usuário logado stateeee:', usuarioLogado);
+  if (usuarioLogado) {
+    const userData = JSON.parse(usuarioLogado);
+    console.log('Usuário logado stateeee:', userData);
+    store.commit('SET_USUARIO_LOGADO', userData);
   }
 
   // Verifica se a rota requer autenticação
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Se o usuário não está logado, redireciona para o login
-    if (!store.getters['estaLogado']) {
-      next({ path: '/admin/login' });
-    } else {
-      // Verifica se a rota requer papel de gerente
-      if (to.matched.some(record => record.meta.requiresAdmin)) {
-        if (store.getters['usuarioPapel'] === 'gerente') {
-          next();
-        } else {
-          next(); 
-        }
-      } else {
-        next();
-      }
-    }
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  console.log('requiresAuth:', requiresAuth);
+  // Verifica se a rota requer ser um usuário administrador
+  const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+  console.log('requiresAdmin:', requiresAdmin);
+  
+  
+      // Estado atual de autenticação do usuário (você deve implementar isso)
+  const isAuthenticated = store.getters["estaLogado"];
+  console.log('isAuthenticated:', isAuthenticated);
+  
+  // Tipo de usuário (ex: 'cliente', 'gerente', null para deslogado)
+  const userType = store.getters["usuarioPapel"];
+  console.log('userType:', userType);
+  console.log('iniciar comparação', from);
+  console.log('iniciar comparação', to);
+
+  if (requiresAuth &&  !isAuthenticated) {
+    console.log("comparacao",requiresAuth &&  isAuthenticated);
+    console.log("comparacao",requiresAuth);
+    console.log("comparacao",isAuthenticated);
+    // Se a rota requer autenticação e o usuário não está autenticado, redireciona para login
+    next({ name: 'Login' });
+    
+  } else if (requiresAuth && requiresAdmin && userType !== 'gerente') {
+    // Se a rota requer um usuário administrador e o usuário não é um gerente, redireciona para uma página de erro ou início
+    next({ name: 'Game' }); // ou { name: 'Error' }, dependendo da sua configuração
   } else {
+    // Se nenhum dos casos acima, prossegue para a rota desejada
     next();
   }
 });
+
+
+
 
 
 

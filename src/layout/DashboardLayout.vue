@@ -10,11 +10,11 @@
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Pedidos Admin</p>
       </sidebar-link>
-      <sidebar-link v-if="estaLogado && (usuarioPapel === 'cliente' || usuarioPapel === 'gerente')" to="/admin/game">
+      <sidebar-link v-if="estaLogado || (usuarioPapel === 'gerente')" to="/admin/game">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Games Cliente</p>
       </sidebar-link>
-      <sidebar-link v-if="estaLogado && (usuarioPapel === 'cliente' || usuarioPapel === 'gerente')" to="/admin/order-list">
+      <sidebar-link v-if="estaLogado || (usuarioPapel === 'gerente')" to="/admin/order-list">
         <i class="nc-icon nc-chart-pie-35"></i>
         <p>Pedidos Cliente</p>
       </sidebar-link>

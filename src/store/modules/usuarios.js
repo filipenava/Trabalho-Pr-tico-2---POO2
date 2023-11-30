@@ -3,7 +3,7 @@ import Usuario from '@/classes/Usuario';
 import Vue from 'vue';
 
 const usuariosMockup = [
-  Usuario({ id: '1', nome: 'João Silva', cpf: '123.456.789-00', rg: 'MG-11.222.333', dataNascimento: '1990-01-01', endereco: 'Rua Exemplo, 123', cep: '31000-000', email: 'teste@teste.com', password: '123', papel: 'gerente', nivel: 0 }),
+  Usuario({ id: '1', nome: 'João Silva', cpf: '123.456.789-00', rg: 'MG-11.222.333', dataNascimento: '1990-01-01', endereco: 'Rua Exemplo, 123', cep: '31000-000', email: '1@1', password: '123', papel: 'gerente', nivel: 0 }),
   Usuario({ id: '2', nome: 'Maria Oliveira', cpf: '987.654.321-00', rg: 'SP-22.333.444', dataNascimento: '1992-02-02', endereco: 'Avenida Exemplo, 456', cep: '32000-000', email: 'z@z', password: '123', papel: 'cliente', nivel: 2 }),
   Usuario({ id: '3', nome: 'Carlos Pereira', cpf: '111.222.333-44', rg: 'RJ-33.444.555', dataNascimento: '1993-03-03', endereco: 'Rua Nova, 789', cep: '33000-000', email: 'carlos@example.com', password: '123', papel: 'cliente', nivel: 3 }),
   Usuario({ id: '4', nome: 'Ana Santos', cpf: '222.333.444-55', rg: 'BA-44.555.666', dataNascimento: '1994-04-04', endereco: 'Avenida Principal, 101', cep: '34000-000', email: 'ana@example.com', password: '123', papel: 'cliente', nivel: 2 }),
@@ -20,6 +20,8 @@ export default {
     usuarios: usuariosMockup,
     usuarioLogadoId: null,
     usuarioLogado: null,
+    userOn: false,
+    descontoEpico: 7,
   },
   mutations: {
     ADICIONAR_USUARIO(state, usuario) {
@@ -32,19 +34,24 @@ export default {
     SET_USUARIO_LOGADO: (state, usuario) => {
       state.usuarioLogado = usuario;
       state.usuarioLogadoId = usuario.id; // Se você quiser manter também o ID
+      state.userOn = true;
     },
     DESLOGAR_USUARIO(state) {
       state.usuarioLogado = null;
       state.usuarioLogadoId = null;
+      state.userOn = false;
       localStorage.removeItem('usuarioLogado');
     },
     ATUALIZAR_USUARIO(state, usuarioAtualizado) {
       const index = state.usuarios.findIndex(u => u.id === usuarioAtualizado.id);
-      console.log('Mutation ATUALIZAR_USUARIO chamada com:', usuarioAtualizado);
       if (index !== -1) {
         Vue.set(state.usuarios, index, usuarioAtualizado);
+        // Verifique se o usuário atualizado é o mesmo que está logado
+        if (state.usuarioLogado && state.usuarioLogado.id === usuarioAtualizado.id) {
+          state.usuarioLogado = usuarioAtualizado;
+        }
       }
-    },
+    },    
   },
   actions: {
     adicionarUsuario({ commit }, usuarioData) {
@@ -52,16 +59,18 @@ export default {
       console.log('Usuário adicionado:', usuario);
       commit('ADICIONAR_USUARIO', usuario);
     },
-    deslogarUsuario({ commit }) {
+    deslogarUsuario({ commit, dispatch }) {
       console.log('Deslogando usuário...');
       commit('DESLOGAR_USUARIO');
-    },
+      dispatch('atualizarTotalCarrinho');
+    },    
     logarUsuario(context, { email, password }) {
       console.log('Logando usuário...', email, password);
       const usuario = context.state.usuarios.find(user => user.email === email && user.password === password);
   
       if (usuario) {
         context.commit('SET_USUARIO_LOGADO', usuario);
+        context.dispatch('atualizarTotalCarrinho');
         localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
         return true;
       } else {
@@ -75,7 +84,8 @@ export default {
         if (index !== -1) {
           // Atualiza o usuário no array
           state.usuarios.splice(index, 1, usuarioAtualizado);
-          commit('SET_USUARIO_LOGADO', usuarioAtualizado); // Atualiza o usuário logado
+          commit('SET_USUARIO_LOGADO', usuarioAtualizado); 
+          dispatch('atualizarTotalCarrinho');
           resolve();
         } else {
           reject(new Error('Usuário não encontrado'));
@@ -98,5 +108,16 @@ export default {
       const usuario = state.usuarios.find(user => user.id === id);
       return usuario ? usuario.nome : 'Usuário desconhecido';
     },
+    gerentes: state => {
+      return state.usuarios.filter(usuario => usuario.papel === 'gerente');
+    },
+    eClienteEpico: state => {
+      if (state.usuarioLogado) {
+        console.log('Nível do usuário logado:', state.usuarioLogado.nivel);
+        return state.usuarioLogado.nivel >= 3;
+      }
+      return false;
+    },      
+    descontoEpico: state => state.descontoEpico,
   },
 };

@@ -56,8 +56,12 @@
             </li>
           </ul>
           <p class="cart-total">
-            Total: R$ {{ cartTotal.toFixed(2) }}
+            Total: R$ {{ cartTotal }}
             <span v-if="hasPhysicalMediaInCart">(incluindo frete de R$ {{ freightValue }})</span>
+            <!-- Exibir desconto para cliente Épico -->
+            <span v-if="eClienteEpico">
+              (Desconto Épico aplicado de {{ descontoEpico }}% - Novo Total: R$ {{ totalCarrinhoComDesconto }})
+            </span>
           </p>
           <button @click="finalizePurchase">Finalizar Compra</button>
           <button @click="clearCart">Limpar Carrinho</button>
@@ -81,20 +85,26 @@ export default {
   },
   computed: {
     ...mapGetters('jogos', ['todosOsJogos', 'generos', 'mediaAvaliacoes']),
-    ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue', ]),
+    ...mapGetters(['carrinho', 'totalCarrinho', 'hasPhysicalMediaInCart', 'freightValue', 'totalCarrinhoComDesconto' ]),
     ...mapGetters(['usuarioLogado']),
-
+    eClienteEpico() {
+      const eEpico = this.$store.getters.eClienteEpico;
+      console.log('Cliente é épico:', eEpico); // Adicionar para debug
+      return eEpico;
+    },
+    descontoEpico() {
+      return this.$store.getters.descontoEpico;
+    },
     selectedGames() {
       return this.carrinho;
     },
-
     cartTotal() {
       return this.totalCarrinho;
     }
   },
   created() {
  
-      console.log(this.$store.state);
+      // console.log(this.$store.state);
   },
   data() {
     return {
@@ -141,23 +151,43 @@ export default {
     isGameSelected(game) {
       return this.selectedGames.some(g => g.id === game.id);
     },
+    calcularTotalComDesconto() {
+      if (this.eClienteEpico) {
+        return this.cartTotal - (this.cartTotal * this.descontoEpico / 100);
+      }
+      return this.cartTotal;
+    },
     finalizePurchase() {
       if (this.selectedGames.length === 0) {
         alert('Seu carrinho está vazio!');
         return;
       }
+      
+
+      this.$store.dispatch('atualizarTotalCarrinho');
       this.$router.push('/admin/checkout');
     },
     handleAddToCart(payload) {
       this.$store.dispatch('adicionarAoCarrinho', payload);
+      this.$store.dispatch('atualizarTotalCarrinho'); 
     },
     clearCart() {
       this.$store.dispatch('limparCarrinho');
+      this.$store.dispatch('calcularTotalComDesconto');
     },
     hasPhysicalMedia() {
       return this.selectedGames.some(game => game.mediaType === 'fisica');
     },
+    
   },
+  watch: {
+    'usuarioLogado': function (novoValor, antigoValor) {
+      if (novoValor !== antigoValor) {
+        this.$store.dispatch('atualizarTotalCarrinho');
+      }
+    }
+  },
+
 
 };
 </script>

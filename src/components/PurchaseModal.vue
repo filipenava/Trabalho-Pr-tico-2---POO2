@@ -38,6 +38,7 @@ export default {
     },
     addToCart() {
       this.$emit('add-to-cart', { game: this.selectedGame, mediaType: this.selectedMediaType,  desenvolvedorId: this.selectedGame.desenvolvedorId });
+      this.$store.dispatch('calcularTotalComDesconto');
       this.hideModal();
     }
   }

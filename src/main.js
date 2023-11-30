@@ -27,11 +27,5 @@ new Vue({
   render: (h) => h(App),
   router,
   store,
-  created() {
-    let usuarioLogado = localStorage.getItem('usuarioLogado');
-    if (usuarioLogado) {
-      usuarioLogado = JSON.parse(usuarioLogado);
-      this.$store.commit('SET_USUARIO_LOGADO', usuarioLogado);
-    }
-  }
+  
 });

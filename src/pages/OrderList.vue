@@ -51,6 +51,7 @@
         orders() {
           // Obtenha todos os pedidos
           const todosPedidos = this.$store.getters.getPedidos;
+          console.log('Todos os pedidos:', todosPedidos); // Adicionar para debug
           
           // Filtre os pedidos para incluir apenas aqueles feitos pelo usuário logado
           const idUsuarioLogado = this.$store.getters.usuarioLogado.id;

@@ -6,7 +6,15 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    name: 'App',
+    mounted() {
+      window.addEventListener("beforeunload", () => {
+        localStorage.setItem('lastRoute', this.$route.path);
+      });
+    }
+  }
+
 </script>
 <style lang="scss">
   .vue-notifyjs.notifications{

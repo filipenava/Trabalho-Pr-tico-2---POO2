@@ -157,6 +157,7 @@ const store = new Vuex.Store({
     hasPhysicalMediaInCart: false,
     freightValue: 5,
     pedidos: pedidosMockup,
+    totalCarrinhoComDesconto: 0,
   },
   mutations: {
     ADICIONAR_DESENVOLVEDOR(state, novoDesenvolvedor) {
@@ -189,13 +190,38 @@ const store = new Vuex.Store({
     ADICIONAR_PEDIDO(state, novoPedido) {
       state.pedidos.push(novoPedido);
     },
+    ATUALIZAR_TOTAL_CARRINHO(state, totalComDesconto) {
+      let total = 0;
+      let temMidiaFisica = false;
+  
+      state.carrinho.forEach(item => {
+        total += item.valor;
+        if (item.mediaType === 'fisica') {
+          temMidiaFisica = true;
+        }
+      });
+      console.log('Tem mídia física no carrinho?', total);
+      if (temMidiaFisica) {
+        total += state.freightValue;
+      }
+      console.log('Total do carrinho:', total);
+      console.log('descontoEpico:', usuarios.state.descontoEpico);
+      console.log('usuarioLogado:', state.usuarioLogado);
+      state.totalCarrinho = total;
+      this.dispatch('calcularTotalComDesconto');
+      
+    },
+    ATUALIZAR_TOTAL_CARRINHO_COM_DESCONTO(state, totalComDesconto) {
+      state.totalCarrinhoComDesconto  = parseFloat(totalComDesconto.toFixed(2));
+    },
   },
   actions: {
     adicionarDesenvolvedor({ commit }, desenvolvedor) {
       commit('ADICIONAR_DESENVOLVEDOR', desenvolvedor);
     },
-    adicionarAoCarrinho({ commit }, payload) {
+    adicionarAoCarrinho({ commit, dispatch  }, payload) {
       commit('ADICIONAR_AO_CARRINHO', payload);
+      dispatch('atualizarTotalCarrinho');
     },
     salvarPedido({ commit, state }, pedido) { 
       commit('ADICIONAR_PEDIDO', pedido);
@@ -205,7 +231,33 @@ const store = new Vuex.Store({
     },
     limparCarrinho({ commit }) {
       commit('LIMPAR_CARRINHO');
-    }
+    },
+    atualizarTotalCarrinho({ commit, getters }) {
+      let descontoEpico = usuarios.state.descontoEpico;
+      let desconto = 0;
+      if (getters.eClienteEpico) {
+        desconto = descontoEpico / 100;
+      }
+      commit('ATUALIZAR_TOTAL_CARRINHO', desconto);
+    },
+    calcularTotalComDesconto({ commit, state }) {
+      let total = 0;
+      state.carrinho.forEach(item => {
+        total += item.valor;
+      });
+  
+      if (state.hasPhysicalMediaInCart) {
+        total += state.freightValue;
+      }
+      console.log("state eeeeeee",state)
+      // Aplica desconto se o cliente for Épico
+      if (state.usuarios.userOn && state.usuarios.usuarioLogado.nivel >= 3) {
+        const desconto = usuarios.state.descontoEpico / 100;
+        total *= (1 - desconto);
+      }
+  
+      commit('ATUALIZAR_TOTAL_CARRINHO_COM_DESCONTO', total);
+    },
   },
   getters: {
     desenvolvedores: (state) => {
@@ -216,7 +268,10 @@ const store = new Vuex.Store({
     hasPhysicalMediaInCart: state => state.hasPhysicalMediaInCart,
     freightValue: state => state.freightValue,
     getPedidos: state => state.pedidos,
-    
+    totalCarrinhoComDesconto: state => {
+      console.log('Total do Carrinho com Desconto:', state.totalCarrinhoComDesconto);
+      return state.totalCarrinhoComDesconto;
+    },
   }
 });
 
